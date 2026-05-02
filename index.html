@@ -1,0 +1,3298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EngiMentor — AI Study Companion</title>
+
+<!-- KaTeX for math rendering -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+
+<!-- Highlight.js for code syntax -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+<!-- Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<!-- Marked for markdown -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+
+<style>
+/* ======================================================
+   ENGIMENTOR — Design System
+   Aesthetic: Deep-tech industrial meets academic clarity
+   Dark theme with amber/gold accents — like an engineer's
+   drafting table lit by a warm lamp at night.
+====================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+
+:root {
+  --bg-0: #0a0b0e;
+  --bg-1: #101217;
+  --bg-2: #161820;
+  --bg-3: #1e2028;
+  --bg-4: #252830;
+
+  --amber: #f5a623;
+  --amber-dim: #c47e10;
+  --amber-glow: rgba(245,166,35,0.15);
+  --amber-glow-strong: rgba(245,166,35,0.3);
+  --amber-text: #ffc24a;
+
+  --teal: #3dd6d0;
+  --teal-dim: #1a9e99;
+  --teal-glow: rgba(61,214,208,0.12);
+
+  --violet: #9b59ff;
+  --violet-glow: rgba(155,89,255,0.12);
+
+  --green: #4ade80;
+  --red: #f87171;
+  --blue: #60a5fa;
+
+  --text-primary: #f0f0f0;
+  --text-secondary: #9aa0b0;
+  --text-muted: #5a6070;
+  --border: rgba(255,255,255,0.07);
+  --border-accent: rgba(245,166,35,0.25);
+
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  --shadow-amber: 0 0 30px rgba(245,166,35,0.2);
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+
+  --sidebar-w: 240px;
+  --header-h: 60px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 14px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-0);
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-1); }
+::-webkit-scrollbar-thumb { background: var(--bg-4); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--amber-dim); }
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+#sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--bg-1);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-logo {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-mark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: var(--amber-text);
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-mark .icon {
+  width: 32px; height: 32px;
+  background: var(--amber-glow);
+  border: 1px solid var(--border-accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+.logo-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-top: 3px;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-section-label {
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 10px 10px 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.18s;
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  position: relative;
+}
+.nav-item:hover {
+  background: var(--bg-3);
+  color: var(--text-primary);
+}
+.nav-item.active {
+  background: var(--amber-glow);
+  border-color: var(--border-accent);
+  color: var(--amber-text);
+  font-weight: 500;
+}
+.nav-item .nav-icon {
+  font-size: 1rem;
+  width: 20px;
+  text-align: center;
+}
+.nav-badge {
+  margin-left: auto;
+  background: var(--amber);
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 99px;
+  font-family: var(--font-mono);
+}
+
+.sidebar-footer {
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.streak-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: var(--amber-glow);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  color: var(--amber-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ============================================================
+   MAIN LAYOUT
+============================================================ */
+#app-main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#topbar {
+  height: var(--header-h);
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbar-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+}
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* ============================================================
+   COMPONENTS — Buttons, Cards, etc.
+============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.18s;
+  border: none;
+  outline: none;
+}
+.btn-amber {
+  background: var(--amber);
+  color: #0a0b0e;
+}
+.btn-amber:hover { background: #ffb733; box-shadow: var(--shadow-amber); }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.btn-outline:hover { border-color: var(--amber-dim); color: var(--amber-text); background: var(--amber-glow); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+.btn-ghost:hover { background: var(--bg-3); color: var(--text-primary); }
+.btn-teal {
+  background: var(--teal-dim);
+  color: #fff;
+}
+.btn-teal:hover { background: var(--teal); }
+.btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+.btn-xs { padding: 4px 9px; font-size: 0.75rem; }
+.btn-danger { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+.btn-danger:hover { background: rgba(248,113,113,0.25); }
+
+.card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+}
+.card-hover:hover {
+  border-color: var(--border-accent);
+  background: var(--bg-3);
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.5px;
+}
+.badge-amber { background: var(--amber-glow); color: var(--amber-text); border: 1px solid var(--border-accent); }
+.badge-teal { background: var(--teal-glow); color: var(--teal); border: 1px solid rgba(61,214,208,0.2); }
+.badge-violet { background: var(--violet-glow); color: var(--violet); border: 1px solid rgba(155,89,255,0.2); }
+.badge-green { background: rgba(74,222,128,0.1); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+.badge-red { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+/* ── Progress bars ── */
+.prog-bar-wrap { background: var(--bg-4); border-radius: 99px; height: 6px; overflow: hidden; }
+.prog-bar-fill { height: 100%; border-radius: 99px; transition: width 0.6s ease; }
+.fill-amber { background: linear-gradient(90deg, var(--amber-dim), var(--amber)); }
+.fill-teal { background: linear-gradient(90deg, var(--teal-dim), var(--teal)); }
+.fill-violet { background: linear-gradient(90deg, #7a3aff, var(--violet)); }
+.fill-green { background: linear-gradient(90deg, #22c55e, var(--green)); }
+
+/* ── Tabs ── */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-1);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.tab {
+  padding: 7px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+  font-family: var(--font-display);
+}
+.tab:hover { color: var(--text-primary); background: var(--bg-3); }
+.tab.active { background: var(--amber); color: #000; font-weight: 700; }
+
+/* ── Input ── */
+input, textarea, select {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  padding: 9px 13px;
+  outline: none;
+  transition: border-color 0.18s;
+  width: 100%;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--amber-dim);
+  box-shadow: 0 0 0 3px var(--amber-glow);
+}
+input::placeholder, textarea::placeholder { color: var(--text-muted); }
+select option { background: var(--bg-3); }
+
+label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-family: var(--font-display);
+}
+.form-group { margin-bottom: 14px; }
+
+/* ── Divider ── */
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+/* ── Stat tile ── */
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stat-val {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--amber-text);
+}
+.stat-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: var(--font-mono);
+}
+
+/* ── Chat bubble ── */
+.chat-bubble {
+  max-width: 85%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  line-height: 1.65;
+  font-size: 0.88rem;
+}
+.chat-user {
+  background: var(--amber-glow);
+  border: 1px solid var(--border-accent);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+.chat-ai {
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+.chat-role {
+  font-size: 0.7rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+.chat-ai .chat-role { color: var(--amber-text); }
+
+/* ── Code block styling ── */
+.code-wrap {
+  position: relative;
+  margin: 12px 0;
+}
+.code-wrap pre {
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem !important;
+  font-family: var(--font-mono) !important;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.code-lang-tag {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  background: rgba(0,0,0,0.4);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* ── Math display ── */
+.math-block {
+  background: var(--bg-1);
+  border-left: 3px solid var(--amber);
+  padding: 14px 18px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+/* ── Loader ── */
+.thinking-dots {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  padding: 4px 0;
+}
+.thinking-dots span {
+  width: 6px; height: 6px;
+  background: var(--amber);
+  border-radius: 50%;
+  animation: dot-bounce 1.2s ease-in-out infinite;
+}
+.thinking-dots span:nth-child(2) { animation-delay: 0.15s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes dot-bounce {
+  0%,80%,100% { transform: scale(0.7); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ── Pages ── */
+.page { display: none; }
+.page.active { display: block; animation: fadeUp 0.3s ease; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   ONBOARDING
+============================================================ */
+#onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(8px);
+}
+.onboarding-modal {
+  background: var(--bg-1);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-xl);
+  width: min(680px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 40px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.8), var(--shadow-amber);
+}
+.onb-step { display: none; }
+.onb-step.active { display: block; animation: fadeUp 0.3s ease; }
+.onb-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--amber-text), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.onb-sub {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.subject-chip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.subject-chip {
+  padding: 8px 14px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.18s;
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+.subject-chip:hover { border-color: var(--amber-dim); color: var(--amber-text); }
+.subject-chip.sel {
+  background: var(--amber-glow);
+  border-color: var(--amber);
+  color: var(--amber-text);
+  font-weight: 700;
+}
+
+.confidence-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.conf-subj { font-weight: 500; font-size: 0.88rem; flex: 1; }
+.conf-stars { display: flex; gap: 4px; }
+.conf-star {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-3);
+  cursor: pointer;
+  font-size: 0.7rem;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  transition: all 0.15s;
+}
+.conf-star.lit { background: var(--amber-glow); border-color: var(--amber); color: var(--amber-text); }
+
+.onb-progress {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+.onb-dot {
+  height: 4px;
+  border-radius: 99px;
+  background: var(--bg-4);
+  flex: 1;
+  transition: background 0.3s;
+}
+.onb-dot.done { background: var(--amber); }
+.onb-dot.current { background: var(--amber-dim); }
+
+/* time block grid */
+.time-grid {
+  display: grid;
+  grid-template-columns: auto repeat(7,1fr);
+  gap: 3px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  overflow-x: auto;
+}
+.tg-header { text-align: center; color: var(--text-muted); padding: 4px; }
+.tg-time { color: var(--text-muted); padding: 4px 8px 4px 0; }
+.tg-cell {
+  height: 22px;
+  border-radius: 3px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.tg-cell:hover { background: var(--bg-4); }
+.tg-cell.busy { background: rgba(155,89,255,0.3); border-color: rgba(155,89,255,0.4); }
+.tg-cell.free { background: rgba(245,166,35,0.3); border-color: var(--border-accent); }
+
+/* ============================================================
+   DASHBOARD
+============================================================ */
+.dash-hero {
+  background: linear-gradient(135deg, var(--bg-2) 0%, rgba(245,166,35,0.05) 100%);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.dash-hero::before {
+  content: '';
+  position: absolute;
+  right: -60px; top: -60px;
+  width: 250px; height: 250px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.dash-greeting {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+.dash-greeting span { color: var(--amber-text); }
+
+.today-schedule {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.schedule-block {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all 0.18s;
+}
+.schedule-block:hover { border-color: var(--border-accent); }
+.sblock-time {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  min-width: 85px;
+}
+.sblock-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sblock-label { font-weight: 500; font-size: 0.88rem; flex: 1; }
+.sblock-badge { }
+
+/* ============================================================
+   TIMETABLE
+============================================================ */
+.timetable-grid {
+  display: grid;
+  grid-template-columns: 70px repeat(7,1fr);
+  gap: 3px;
+  font-size: 0.75rem;
+}
+.tt-header {
+  text-align: center;
+  padding: 8px 4px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
+.tt-time {
+  padding: 4px 6px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-align: right;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 6px;
+}
+.tt-slot {
+  min-height: 40px;
+  border-radius: 4px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  padding: 4px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.tt-slot:hover { border-color: var(--border-accent); }
+.tt-event {
+  height: 100%;
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.tt-event:hover { filter: brightness(1.15); }
+.subject-colors {
+  --c-physics: rgba(96,165,250,0.25);
+  --cb-physics: rgba(96,165,250,0.6);
+  --c-calculus: rgba(245,166,35,0.25);
+  --cb-calculus: rgba(245,166,35,0.6);
+  --c-cpp: rgba(61,214,208,0.25);
+  --cb-cpp: rgba(61,214,208,0.6);
+  --c-linalg: rgba(155,89,255,0.25);
+  --cb-linalg: rgba(155,89,255,0.6);
+  --c-diffeq: rgba(248,113,113,0.25);
+  --cb-diffeq: rgba(248,113,113,0.6);
+  --c-circuits: rgba(74,222,128,0.25);
+  --cb-circuits: rgba(74,222,128,0.6);
+  --c-ict: rgba(251,191,36,0.25);
+  --cb-ict: rgba(251,191,36,0.6);
+}
+
+/* ============================================================
+   CHAT COMPANION
+============================================================ */
+#companion-page {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--header-h));
+  overflow: hidden;
+}
+.companion-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.companion-input-area {
+  border-top: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  background: var(--bg-1);
+}
+.companion-textarea {
+  flex: 1;
+  resize: none;
+  min-height: 44px;
+  max-height: 140px;
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+}
+
+/* ============================================================
+   QUIZ / TEST
+============================================================ */
+.quiz-question-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.quiz-q-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.quiz-q-text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.18s;
+  font-size: 0.875rem;
+}
+.quiz-option:hover { background: var(--bg-3); border-color: var(--border-accent); }
+.quiz-option.selected { background: var(--amber-glow); border-color: var(--amber); color: var(--amber-text); }
+.quiz-option.correct { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.4); color: var(--green); }
+.quiz-option.wrong { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.4); color: var(--red); }
+.quiz-option-letter {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--bg-4);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.quiz-timer {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  color: var(--amber-text);
+  padding: 6px 14px;
+  background: var(--amber-glow);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  letter-spacing: 2px;
+}
+
+/* ============================================================
+   PROGRESS
+============================================================ */
+.subject-mastery-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.sm-name { font-weight: 500; font-size: 0.88rem; width: 180px; }
+.sm-bar { flex: 1; }
+.sm-pct {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--amber-text);
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ============================================================
+   CONCEPT CARDS
+============================================================ */
+.concept-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all 0.2s;
+}
+.concept-card:hover { border-color: var(--border-accent); transform: translateY(-2px); box-shadow: var(--shadow-card); }
+.cc-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cc-icon {
+  width: 36px; height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.cc-body { padding: 16px 20px; font-size: 0.875rem; line-height: 1.65; color: var(--text-secondary); }
+.cc-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: var(--bg-2);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-xl);
+  width: min(600px, 95vw);
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 32px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+  animation: fadeUp 0.25s ease;
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+/* ============================================================
+   HOMEWORK HELPER — Circuit Canvas
+============================================================ */
+#circuit-canvas {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: crosshair;
+  display: block;
+}
+
+/* ── Notification toast ── */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  background: var(--bg-3);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-card);
+  animation: slideIn 0.3s ease;
+  max-width: 320px;
+}
+@keyframes slideIn {
+  from { transform: translateX(40px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.toast .toast-icon { font-size: 1.1rem; }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); }
+  #app-main { margin-left: 0; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  #main-content { padding: 16px; }
+}
+
+/* ── Rendered markdown styles ── */
+.ai-content h3 { font-family: var(--font-display); color: var(--amber-text); margin: 12px 0 6px; font-size: 0.95rem; }
+.ai-content h4 { font-family: var(--font-display); color: var(--teal); margin: 10px 0 4px; font-size: 0.85rem; }
+.ai-content p { margin-bottom: 10px; font-size: 0.88rem; line-height: 1.65; }
+.ai-content ul, .ai-content ol { margin: 8px 0 8px 20px; }
+.ai-content li { margin-bottom: 4px; font-size: 0.88rem; }
+.ai-content code { background: var(--bg-1); padding: 1px 5px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--teal); }
+.ai-content strong { color: var(--text-primary); }
+.ai-content .error-highlight { color: var(--red); background: rgba(248,113,113,0.1); padding: 2px 6px; border-radius: 3px; }
+.ai-content .correct-highlight { color: var(--green); background: rgba(74,222,128,0.1); padding: 2px 6px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ====================================================
+     ONBOARDING OVERLAY
+==================================================== -->
+<div id="onboarding-overlay">
+  <div class="onboarding-modal">
+    <div class="onb-progress" id="onb-progress"></div>
+
+    <!-- Step 1: Welcome -->
+    <div class="onb-step active" id="onb-step-1">
+      <div style="font-size:2.5rem; margin-bottom:12px;">⚙️</div>
+      <div class="onb-title">Welcome to EngiMentor</div>
+      <div class="onb-sub">Your AI-powered engineering study companion. Let's set you up for success — it takes about 2 minutes.</div>
+      <div class="form-group">
+        <label>Your first name</label>
+        <input type="text" id="onb-name" placeholder="e.g. Hamza" />
+      </div>
+      <div class="form-group">
+        <label>Study year / semester</label>
+        <select id="onb-year">
+          <option value="">Select...</option>
+          <option>Year 1, Sem 1</option>
+          <option>Year 1, Sem 2</option>
+          <option>Year 2, Sem 1</option>
+          <option>Year 2, Sem 2</option>
+          <option>Year 3+</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Peak productivity time</label>
+        <select id="onb-peak">
+          <option value="morning">Morning (6am–12pm)</option>
+          <option value="afternoon">Afternoon (12pm–5pm)</option>
+          <option value="evening">Evening (5pm–10pm)</option>
+          <option value="night">Night (10pm–2am)</option>
+        </select>
+      </div>
+      <button class="btn btn-amber" onclick="nextOnbStep()" style="width:100%;justify-content:center;margin-top:8px">Continue →</button>
+    </div>
+
+    <!-- Step 2: Subjects -->
+    <div class="onb-step" id="onb-step-2">
+      <div class="onb-title">Your Subjects</div>
+      <div class="onb-sub">Select all courses you're currently enrolled in.</div>
+      <div class="subject-chip-grid" id="subject-chips">
+        <div class="subject-chip" data-subject="Applied Physics" onclick="toggleSubject(this)">⚡ Applied Physics</div>
+        <div class="subject-chip" data-subject="ICT" onclick="toggleSubject(this)">📡 ICT</div>
+        <div class="subject-chip" data-subject="C++ Programming" onclick="toggleSubject(this)">💻 C++ Programming</div>
+        <div class="subject-chip" data-subject="Calculus" onclick="toggleSubject(this)">∫ Calculus</div>
+        <div class="subject-chip" data-subject="Linear Algebra" onclick="toggleSubject(this)">🔢 Linear Algebra</div>
+        <div class="subject-chip" data-subject="Differential Equations" onclick="toggleSubject(this)">〰️ Differential Equations</div>
+        <div class="subject-chip" data-subject="Circuit Analysis" onclick="toggleSubject(this)">🔌 Circuit Analysis</div>
+      </div>
+      <div id="credit-hours-section" style="display:none">
+        <div class="divider"></div>
+        <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:12px;">Set credit hours for each subject:</div>
+        <div id="credit-inputs"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-ghost" onclick="prevOnbStep()">← Back</button>
+        <button class="btn btn-amber" onclick="nextOnbStep()" style="flex:1;justify-content:center">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Confidence -->
+    <div class="onb-step" id="onb-step-3">
+      <div class="onb-title">Rate Your Confidence</div>
+      <div class="onb-sub">1 = struggling, 5 = confident. This helps prioritize your study sessions.</div>
+      <div id="confidence-rows"></div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-ghost" onclick="prevOnbStep()">← Back</button>
+        <button class="btn btn-amber" onclick="nextOnbStep()" style="flex:1;justify-content:center">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Schedule -->
+    <div class="onb-step" id="onb-step-4">
+      <div class="onb-title">Your Weekly Availability</div>
+      <div class="onb-sub">Click cells to mark your <span style="color:var(--violet)">busy</span> slots (classes/work). We'll schedule study into the free time.</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;font-family:var(--font-mono);">Click = toggle busy | Shift+click = mark free study slot</div>
+      <div class="time-grid" id="time-grid"></div>
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted)">
+          <div style="width:12px;height:12px;background:rgba(155,89,255,0.4);border-radius:2px;border:1px solid rgba(155,89,255,0.5)"></div> Busy
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-muted)">
+          <div style="width:12px;height:12px;background:rgba(245,166,35,0.3);border-radius:2px;border:1px solid var(--border-accent)"></div> Free study time
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-ghost" onclick="prevOnbStep()">← Back</button>
+        <button class="btn btn-amber" onclick="nextOnbStep()" style="flex:1;justify-content:center">Continue →</button>
+      </div>
+    </div>
+
+    <!-- Step 5: Exam dates -->
+    <div class="onb-step" id="onb-step-5">
+      <div class="onb-title">Upcoming Deadlines</div>
+      <div class="onb-sub">Add exam dates so EngiMentor activates Exam Crunch Mode automatically.</div>
+      <div id="exam-inputs"></div>
+      <button class="btn btn-outline btn-sm" onclick="addExamRow()" style="margin-top:8px">+ Add deadline</button>
+      <div class="divider"></div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button class="btn btn-ghost" onclick="prevOnbStep()">← Back</button>
+        <button class="btn btn-amber" onclick="completeOnboarding()" style="flex:1;justify-content:center">🚀 Launch EngiMentor</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================
+     SIDEBAR
+==================================================== -->
+<nav id="sidebar" class="subject-colors">
+  <div class="sidebar-logo">
+    <div class="logo-mark">
+      <div class="icon">⚙</div>
+      EngiMentor
+    </div>
+    <div class="logo-sub">v2.0 · AI Study Engine</div>
+  </div>
+
+  <div class="sidebar-nav">
+    <div class="nav-section-label">Overview</div>
+    <div class="nav-item active" onclick="showPage('dashboard')">
+      <span class="nav-icon">🏠</span> Dashboard
+    </div>
+    <div class="nav-item" onclick="showPage('timetable')">
+      <span class="nav-icon">📅</span> Timetable
+    </div>
+    <div class="nav-item" onclick="showPage('progress')">
+      <span class="nav-icon">📈</span> Progress
+    </div>
+
+    <div class="nav-section-label">Study</div>
+    <div class="nav-item" onclick="showPage('concepts')">
+      <span class="nav-icon">📚</span> Concept Library
+    </div>
+    <div class="nav-item" onclick="showPage('quiz')">
+      <span class="nav-icon">🎯</span> Practice Tests
+      <span class="nav-badge" id="quiz-badge">3</span>
+    </div>
+    <div class="nav-item" onclick="showPage('companion')">
+      <span class="nav-icon">🤖</span> AI Companion
+    </div>
+    <div class="nav-item" onclick="showPage('homework')">
+      <span class="nav-icon">✏️</span> Homework Helper
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="streak-badge">
+      🔥 <span id="sidebar-streak">0</span>-day streak
+    </div>
+  </div>
+</nav>
+
+<!-- ====================================================
+     MAIN
+==================================================== -->
+<div id="app-main">
+  <!-- Topbar -->
+  <div id="topbar">
+    <button class="btn btn-ghost btn-sm" id="mobile-menu-btn" style="display:none;padding:6px" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-title" id="page-title">Dashboard</div>
+    <div class="topbar-actions">
+      <div id="crunch-badge" style="display:none" class="badge badge-red">🔥 Exam Crunch Mode</div>
+      <button class="btn btn-outline btn-sm" onclick="showPage('quiz')">Quick Test</button>
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--amber-glow);border:1px solid var(--border-accent);display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;" title="Profile">👤</div>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div id="main-content">
+
+    <!-- ======================== DASHBOARD ======================== -->
+    <div id="page-dashboard" class="page active">
+      <div class="dash-hero" id="dash-hero">
+        <div class="dash-greeting">Good <span id="greeting-time">morning</span>, <span id="greeting-name">Student</span> 👋</div>
+        <div style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:16px">
+          Here's your study brief for today.
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div class="badge badge-amber" id="streak-badge">🔥 0-day streak</div>
+          <div class="badge badge-teal" id="today-sessions-badge">📅 0 sessions today</div>
+          <div class="badge badge-violet" id="weak-areas-badge">⚠️ 0 weak areas</div>
+        </div>
+        <div id="today-schedule" class="today-schedule"></div>
+      </div>
+
+      <div class="grid-4" style="margin-bottom:24px" id="dash-stats">
+        <div class="card stat-tile">
+          <div class="stat-label">Study Streak</div>
+          <div class="stat-val" id="stat-streak">0</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">days</div>
+        </div>
+        <div class="card stat-tile">
+          <div class="stat-label">GPA Estimate</div>
+          <div class="stat-val" id="stat-gpa">—</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">out of 4.0</div>
+        </div>
+        <div class="card stat-tile">
+          <div class="stat-label">Tests Taken</div>
+          <div class="stat-val" id="stat-tests">0</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">total sessions</div>
+        </div>
+        <div class="card stat-tile">
+          <div class="stat-label">Avg. Score</div>
+          <div class="stat-val" id="stat-avg">—</div>
+          <div style="font-size:0.75rem;color:var(--text-muted)">percent</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">⚠️ Weak Areas</div>
+            <button class="btn btn-outline btn-xs" onclick="showPage('quiz')">Practice</button>
+          </div>
+          <div id="weak-areas-list"></div>
+        </div>
+        <div class="card">
+          <div class="section-header">
+            <div class="section-title">📊 Subject Mastery</div>
+          </div>
+          <div id="dash-mastery-list"></div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px" class="card">
+        <div class="section-header">
+          <div class="section-title">📅 Upcoming Sessions</div>
+          <button class="btn btn-outline btn-xs" onclick="showPage('timetable')">Full Timetable</button>
+        </div>
+        <div id="upcoming-sessions"></div>
+      </div>
+    </div>
+
+    <!-- ======================== TIMETABLE ======================== -->
+    <div id="page-timetable" class="page">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+        <div>
+          <div class="section-title" style="font-size:1.3rem">📅 Weekly Study Timetable</div>
+          <div style="color:var(--text-muted);font-size:0.82rem;margin-top:4px;font-family:var(--font-mono)">Color-coded by subject · Drag to rearrange</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-outline btn-sm" onclick="regenerateTimetable()">🔄 Regenerate</button>
+          <button class="btn btn-amber btn-sm" onclick="showCrunchMode()">🔥 Exam Crunch Mode</button>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px" id="tt-legend"></div>
+
+      <!-- Timetable grid -->
+      <div class="card" style="overflow-x:auto;padding:16px">
+        <div class="timetable-grid subject-colors" id="timetable-grid"></div>
+      </div>
+
+      <div style="margin-top:16px" class="card">
+        <div class="section-header">
+          <div class="section-title">📍 Exam Dates</div>
+          <button class="btn btn-outline btn-xs" onclick="openExamModal()">+ Add Exam</button>
+        </div>
+        <div id="exam-list"></div>
+      </div>
+    </div>
+
+    <!-- ======================== PROGRESS ======================== -->
+    <div id="page-progress" class="page">
+      <div class="section-title" style="font-size:1.3rem;margin-bottom:20px">📈 Your Progress</div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:14px">Performance Over Time</div>
+          <canvas id="progress-chart" height="200"></canvas>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-bottom:14px">Subject Scores</div>
+          <canvas id="radar-chart" height="200"></canvas>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <div class="section-header">
+          <div class="section-title">📚 Mastery by Subject</div>
+          <div style="font-size:0.78rem;color:var(--text-muted);font-family:var(--font-mono)">Based on test performance</div>
+        </div>
+        <div id="mastery-list"></div>
+      </div>
+
+      <div class="card">
+        <div class="section-header">
+          <div class="section-title">🎓 GPA Estimator</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+          <div>
+            <div class="stat-label">Projected GPA</div>
+            <div class="stat-val" id="gpa-display">—</div>
+          </div>
+          <div style="flex:1;min-width:200px">
+            <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.6" id="gpa-advice"></div>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div id="topic-mistakes" style="font-size:0.85rem;color:var(--text-secondary)"></div>
+      </div>
+    </div>
+
+    <!-- ======================== CONCEPTS ======================== -->
+    <div id="page-concepts" class="page">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+        <div class="section-title" style="font-size:1.3rem;flex:1">📚 Concept Library</div>
+        <input type="text" id="concept-search" placeholder="Search topics..." style="max-width:280px" oninput="filterConcepts(this.value)" />
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px" id="concept-subject-tabs">
+      </div>
+
+      <div class="grid-3" id="concepts-grid"></div>
+
+      <!-- Concept detail view -->
+      <div id="concept-detail" style="display:none">
+        <button class="btn btn-ghost btn-sm" onclick="closeConcept()" style="margin-bottom:16px">← Back to Library</button>
+        <div class="card" id="concept-detail-card">
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== QUIZ ======================== -->
+    <div id="page-quiz" class="page">
+      <div id="quiz-setup" >
+        <div class="section-title" style="font-size:1.3rem;margin-bottom:4px">🎯 Practice Test Generator</div>
+        <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:20px">Customise your test based on your current focus.</div>
+        <div class="grid-2">
+          <div class="card">
+            <div style="font-family:var(--font-display);font-weight:700;margin-bottom:14px">Configure Test</div>
+            <div class="form-group">
+              <label>Subject</label>
+              <select id="quiz-subject">
+                <option value="random">🎲 Random (weak areas first)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Difficulty</label>
+              <select id="quiz-diff">
+                <option value="easy">Easy — Build fundamentals</option>
+                <option value="medium" selected>Medium — Standard exam level</option>
+                <option value="hard">Hard — Challenge mode</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Number of questions</label>
+              <select id="quiz-count">
+                <option value="5">5 questions</option>
+                <option value="10" selected>10 questions</option>
+                <option value="15">15 questions</option>
+                <option value="20">20 questions</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Question format</label>
+              <select id="quiz-format">
+                <option value="mixed">Mixed (MCQ + open-ended)</option>
+                <option value="mcq">Multiple choice only</option>
+                <option value="open">Open-ended solving</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Timer (optional)</label>
+              <select id="quiz-timer-opt">
+                <option value="none">No timer</option>
+                <option value="10">10 minutes</option>
+                <option value="20">20 minutes</option>
+                <option value="30">30 minutes</option>
+              </select>
+            </div>
+            <button class="btn btn-amber" onclick="generateQuiz()" style="width:100%;justify-content:center">🚀 Generate Test</button>
+          </div>
+          <div class="card">
+            <div style="font-family:var(--font-display);font-weight:700;margin-bottom:14px">📋 Recent Tests</div>
+            <div id="recent-tests-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="quiz-active" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+          <div>
+            <div class="section-title">Question <span id="q-current">1</span> of <span id="q-total">10</span></div>
+            <div id="q-subject-label" class="badge badge-amber" style="margin-top:4px"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="quiz-timer" id="quiz-timer" style="display:none">--:--</div>
+            <button class="btn btn-outline btn-sm" onclick="requestHint()">💡 Hint</button>
+            <button class="btn btn-ghost btn-sm" onclick="endQuiz()">End Test</button>
+          </div>
+        </div>
+        <!-- progress bar -->
+        <div class="prog-bar-wrap" style="margin-bottom:20px;height:4px">
+          <div class="prog-bar-fill fill-amber" id="quiz-progress-bar" style="width:0%"></div>
+        </div>
+        <div id="quiz-question-area"></div>
+        <div style="display:flex;gap:10px;margin-top:16px" id="quiz-nav">
+          <button class="btn btn-outline" onclick="markForReview()">🔖 Mark for Review</button>
+          <div style="flex:1"></div>
+          <button class="btn btn-outline" onclick="skipQuestion()">Skip →</button>
+          <button class="btn btn-amber" onclick="submitAnswer()">Submit Answer</button>
+        </div>
+        <div id="quiz-hint-area" style="display:none;margin-top:12px" class="card">
+          <div style="font-size:0.75rem;font-family:var(--font-mono);color:var(--amber-text);margin-bottom:8px">💡 HINT</div>
+          <div id="quiz-hint-text" style="font-size:0.875rem;color:var(--text-secondary)"></div>
+        </div>
+      </div>
+
+      <div id="quiz-results" style="display:none">
+        <div class="card" style="text-align:center;padding:40px">
+          <div style="font-size:3rem;margin-bottom:12px" id="results-emoji">🎯</div>
+          <div class="section-title" style="font-size:1.5rem;margin-bottom:8px">Test Complete!</div>
+          <div class="stat-val" style="font-size:3rem" id="results-score">0%</div>
+          <div style="color:var(--text-muted);margin-bottom:24px" id="results-summary"></div>
+          <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-amber" onclick="reviewAnswers()">📖 Review Answers</button>
+            <button class="btn btn-outline" onclick="resetQuiz()">🔄 New Test</button>
+          </div>
+        </div>
+        <div id="answer-review" style="display:none;margin-top:20px"></div>
+      </div>
+    </div>
+
+    <!-- ======================== COMPANION ======================== -->
+    <div id="page-companion" class="page" style="padding:0">
+      <div id="companion-page" style="height:calc(100vh - 60px);display:flex;flex-direction:column">
+        <div style="padding:16px 20px;border-bottom:1px solid var(--border);background:var(--bg-1)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:36px;height:36px;border-radius:50%;background:var(--amber-glow);border:1px solid var(--border-accent);display:flex;align-items:center;justify-content:center;font-size:1.1rem">🤖</div>
+            <div>
+              <div style="font-family:var(--font-display);font-weight:700;font-size:0.95rem">AI Companion</div>
+              <div style="font-size:0.72rem;color:var(--green);font-family:var(--font-mono)">● Online · Powered by Claude</div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:8px">
+              <select id="companion-mode" style="width:auto;font-size:0.78rem;padding:5px 10px">
+                <option value="tutor">🎓 Tutor Mode</option>
+                <option value="socratic">🤔 Socratic Mode</option>
+                <option value="direct">⚡ Direct Answer</option>
+                <option value="checker">✅ Answer Checker</option>
+              </select>
+              <button class="btn btn-ghost btn-sm" onclick="clearChat()">🗑</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="companion-body" id="chat-messages">
+          <div style="text-align:center;padding:40px 20px">
+            <div style="font-size:2.5rem;margin-bottom:12px">🤖</div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:8px">Hello! I'm your AI Study Companion.</div>
+            <div style="color:var(--text-secondary);font-size:0.88rem;max-width:400px;margin:0 auto;line-height:1.6">Ask me anything about your subjects. I can explain concepts, check your work, solve problems step-by-step, or quiz you. What would you like to explore?</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:20px" id="quick-prompts">
+              <button class="btn btn-outline btn-sm" onclick="quickPrompt('Explain integration by parts with an example')">∫ Integration by Parts</button>
+              <button class="btn btn-outline btn-sm" onclick="quickPrompt('Walk me through KVL for a circuit with 3 loops')">🔌 KVL Step-by-Step</button>
+              <button class="btn btn-outline btn-sm" onclick="quickPrompt('Explain pointers in C++ with a simple example')">💻 C++ Pointers</button>
+              <button class="btn btn-outline btn-sm" onclick="quickPrompt('What are eigenvalues and why do they matter?')">🔢 Eigenvalues</button>
+              <button class="btn btn-outline btn-sm" onclick="quickPrompt('Help me solve a first-order ODE')">〰️ Solve ODE</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="companion-input-area">
+          <div style="flex:1;position:relative">
+            <textarea id="chat-input" class="companion-textarea" placeholder="Ask anything... type LaTeX like $\int x^2 dx$ or paste code..." rows="1" onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="toggleVoice()" id="voice-btn" title="Voice input">🎙</button>
+          <button class="btn btn-amber" onclick="sendChat()" id="send-btn">Send ↑</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================== HOMEWORK ======================== -->
+    <div id="page-homework" class="page">
+      <div class="section-title" style="font-size:1.3rem;margin-bottom:4px">✏️ Homework Helper</div>
+      <div style="color:var(--text-muted);font-size:0.85rem;margin-bottom:20px">Snap a photo, paste a problem, or describe your question.</div>
+
+      <div class="grid-2" style="align-items:start">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div style="font-family:var(--font-display);font-weight:700;margin-bottom:14px">📝 Input Your Problem</div>
+            <div class="tab-bar" style="margin-bottom:14px" id="hw-input-tabs">
+              <div class="tab active" onclick="switchHwTab('text',this)">📝 Type</div>
+              <div class="tab" onclick="switchHwTab('latex',this)">∫ LaTeX</div>
+              <div class="tab" onclick="switchHwTab('code',this)">💻 Code</div>
+              <div class="tab" onclick="switchHwTab('photo',this)">📷 Photo</div>
+            </div>
+            <div id="hw-text-input">
+              <textarea id="hw-problem" placeholder="Describe or paste your homework problem here..." style="min-height:120px"></textarea>
+            </div>
+            <div id="hw-latex-input" style="display:none">
+              <textarea id="hw-latex" placeholder="Enter LaTeX: e.g. \int_0^1 x^2 dx" style="min-height:80px;font-family:var(--font-mono)"></textarea>
+              <div id="hw-latex-preview" class="math-block" style="margin-top:8px;min-height:40px;color:var(--text-muted);font-size:0.8rem">LaTeX preview will appear here...</div>
+            </div>
+            <div id="hw-code-input" style="display:none">
+              <textarea id="hw-code" placeholder="Paste your C++ code here..." style="min-height:140px;font-family:var(--font-mono);font-size:0.82rem"></textarea>
+            </div>
+            <div id="hw-photo-input" style="display:none">
+              <div style="border:2px dashed var(--border-accent);border-radius:var(--radius-sm);padding:40px 20px;text-align:center;cursor:pointer" onclick="document.getElementById('hw-file').click()">
+                <div style="font-size:2rem;margin-bottom:8px">📷</div>
+                <div style="color:var(--text-secondary);font-size:0.88rem">Click to upload a photo of your handwritten work</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">Supports: JPG, PNG, PDF</div>
+                <input type="file" id="hw-file" style="display:none" accept="image/*,.pdf" onchange="handleHwFile(this)">
+              </div>
+              <div id="hw-file-preview" style="margin-top:10px;display:none"></div>
+            </div>
+            <div class="form-group" style="margin-top:12px">
+              <label>Subject context</label>
+              <select id="hw-subject-ctx">
+                <option value="">Auto-detect</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:4px">
+              <button class="btn btn-amber" onclick="solveHomework()" style="flex:1;justify-content:center">🔍 Get Step-by-Step Solution</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="font-family:var(--font-display);font-weight:700;margin-bottom:12px">🎨 Circuit Sketch Tool</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px">Draw a quick ASCII circuit or describe it, and I'll analyze it.</div>
+            <canvas id="circuit-canvas" width="380" height="200"></canvas>
+            <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+              <button class="btn btn-outline btn-xs" onclick="clearCircuit()">🗑 Clear</button>
+              <button class="btn btn-outline btn-xs" onclick="addCircuitElement('R')">+ Resistor</button>
+              <button class="btn btn-outline btn-xs" onclick="addCircuitElement('V')">+ Voltage</button>
+              <button class="btn btn-outline btn-xs" onclick="addCircuitElement('C')">+ Capacitor</button>
+              <button class="btn btn-amber btn-xs" onclick="analyzeCircuit()">⚡ Analyze</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="card" id="hw-solution-card" style="min-height:300px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+              <div style="font-family:var(--font-display);font-weight:700;flex:1">📖 Solution</div>
+              <div class="badge badge-teal">Step-by-Step</div>
+            </div>
+            <div id="hw-solution-body" style="color:var(--text-muted);font-size:0.875rem;text-align:center;padding:40px 0">
+              <div style="font-size:2rem;margin-bottom:12px">📝</div>
+              Enter your problem and click "Get Solution"
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /app-main -->
+
+<!-- ====================================================
+     MODAL — Exam
+==================================================== -->
+<div class="modal-overlay" id="exam-modal">
+  <div class="modal-box">
+    <div class="modal-title">📅 Add Exam / Deadline</div>
+    <div class="form-group">
+      <label>Subject</label>
+      <select id="modal-exam-subject"></select>
+    </div>
+    <div class="form-group">
+      <label>Event name</label>
+      <input id="modal-exam-name" type="text" placeholder="e.g. Midterm Exam, Assignment 2" />
+    </div>
+    <div class="form-group">
+      <label>Date</label>
+      <input id="modal-exam-date" type="date" />
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-ghost" onclick="closeModal('exam-modal')">Cancel</button>
+      <button class="btn btn-amber" onclick="addExamFromModal()" style="flex:1;justify-content:center">Add Deadline</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ====================================================
+     JAVASCRIPT
+==================================================== -->
+<script>
+// ============================================================
+//  STATE
+// ============================================================
+const API_KEY_PLACEHOLDER = null; // Filled by Anthropic proxy in Artifacts
+
+let state = {
+  profile: null,
+  subjects: [],
+  confidence: {},
+  busySlots: {},
+  exams: [],
+  timetable: [],
+  chatHistory: [],
+  quizState: null,
+  testHistory: [],
+  mastery: {},
+  streak: 0,
+  lastStudyDate: null,
+};
+
+// Subject metadata
+const SUBJECT_META = {
+  'Applied Physics':      { icon:'⚡', color:'var(--blue)',   key:'physics',   credits:3 },
+  'ICT':                  { icon:'📡', color:'#fbbf24',       key:'ict',       credits:2 },
+  'C++ Programming':      { icon:'💻', color:'var(--teal)',   key:'cpp',       credits:3 },
+  'Calculus':             { icon:'∫',  color:'var(--amber)',  key:'calculus',  credits:4 },
+  'Linear Algebra':       { icon:'🔢', color:'var(--violet)', key:'linalg',    credits:3 },
+  'Differential Equations':{ icon:'〰️', color:'var(--red)',   key:'diffeq',    credits:3 },
+  'Circuit Analysis':     { icon:'🔌', color:'var(--green)',  key:'circuits',  credits:4 },
+};
+
+// ============================================================
+//  PERSISTENCE
+// ============================================================
+function saveState() {
+  try { localStorage.setItem('engimentor_state', JSON.stringify(state)); } catch(e) {}
+}
+function loadState() {
+  try {
+    const s = localStorage.getItem('engimentor_state');
+    if (s) { state = { ...state, ...JSON.parse(s) }; return true; }
+  } catch(e) {}
+  return false;
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  const loaded = loadState();
+  if (loaded && state.profile) {
+    hideOnboarding();
+    renderApp();
+  } else {
+    buildOnboarding();
+  }
+  updateGreeting();
+  updateStreak();
+});
+
+function updateGreeting() {
+  const h = new Date().getHours();
+  const t = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+  const el = document.getElementById('greeting-time');
+  if (el) el.textContent = t;
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  if (state.lastStudyDate === today) {
+    // already counted
+  } else if (state.lastStudyDate === new Date(Date.now()-86400000).toDateString()) {
+    state.streak = (state.streak||0) + 1;
+    state.lastStudyDate = today;
+    saveState();
+  } else {
+    state.streak = state.streak || 0;
+  }
+  document.querySelectorAll('#streak-badge,#sidebar-streak').forEach(el => {
+    if (el.id === 'sidebar-streak') el.textContent = state.streak;
+    else el.textContent = `🔥 ${state.streak}-day streak`;
+  });
+}
+
+// ============================================================
+//  ONBOARDING
+// ============================================================
+let onbStep = 1;
+const ONB_TOTAL = 5;
+
+function buildOnbProgress() {
+  const c = document.getElementById('onb-progress');
+  c.innerHTML = '';
+  for (let i=1;i<=ONB_TOTAL;i++) {
+    const d = document.createElement('div');
+    d.className = `onb-dot ${i<onbStep?'done':i===onbStep?'current':''}`;
+    c.appendChild(d);
+  }
+}
+
+function buildOnboarding() {
+  buildOnbProgress();
+  buildTimeGrid();
+}
+
+function nextOnbStep() {
+  if (onbStep === 2) buildConfidenceRows();
+  if (onbStep === 3) buildExamInputs();
+  if (onbStep === 4) buildExamInputs();
+  document.getElementById(`onb-step-${onbStep}`).classList.remove('active');
+  onbStep++;
+  document.getElementById(`onb-step-${onbStep}`)?.classList.add('active');
+  buildOnbProgress();
+  if (onbStep === 2) rebuildCreditInputs();
+}
+
+function prevOnbStep() {
+  document.getElementById(`onb-step-${onbStep}`).classList.remove('active');
+  onbStep--;
+  document.getElementById(`onb-step-${onbStep}`)?.classList.add('active');
+  buildOnbProgress();
+}
+
+function toggleSubject(el) {
+  el.classList.toggle('sel');
+  rebuildCreditInputs();
+}
+
+function rebuildCreditInputs() {
+  const sel = [...document.querySelectorAll('.subject-chip.sel')].map(e=>e.dataset.subject);
+  const sec = document.getElementById('credit-hours-section');
+  const ci = document.getElementById('credit-inputs');
+  if (!sel.length) { sec.style.display='none'; return; }
+  sec.style.display='block';
+  ci.innerHTML = sel.map(s => {
+    const m = SUBJECT_META[s] || {};
+    return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+      <span style="flex:1;font-size:0.85rem">${m.icon||''} ${s}</span>
+      <input type="number" min="1" max="6" value="${m.credits||3}" style="width:70px;text-align:center" placeholder="Credits" id="cr-${s.replace(/[^a-z]/gi,'_')}">
+    </div>`;
+  }).join('');
+}
+
+function buildConfidenceRows() {
+  const sel = [...document.querySelectorAll('.subject-chip.sel')].map(e=>e.dataset.subject);
+  const c = document.getElementById('confidence-rows');
+  c.innerHTML = sel.map(s => `
+    <div class="confidence-row" data-subj="${s}">
+      <span class="conf-subj">${SUBJECT_META[s]?.icon||''} ${s}</span>
+      <div class="conf-stars">
+        ${[1,2,3,4,5].map(n=>`<div class="conf-star" onclick="setConf('${s}',${n})" data-n="${n}">${n}</div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  // default confidence 3
+  sel.forEach(s => setConf(s, 3));
+}
+
+function setConf(subject, val) {
+  state.confidence[subject] = val;
+  const row = document.querySelector(`.confidence-row[data-subj="${subject}"]`);
+  if (!row) return;
+  row.querySelectorAll('.conf-star').forEach(star => {
+    star.classList.toggle('lit', parseInt(star.dataset.n) <= val);
+  });
+}
+
+function buildTimeGrid() {
+  const grid = document.getElementById('time-grid');
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const hours = [];
+  for(let h=7;h<=22;h++) hours.push(`${String(h).padStart(2,'0')}:00`);
+
+  let html = '<div class="tg-time"></div>';
+  days.forEach(d => html += `<div class="tg-header">${d}</div>`);
+  hours.forEach(hr => {
+    html += `<div class="tg-time">${hr}</div>`;
+    days.forEach((d,di) => {
+      const key = `${di}_${hr}`;
+      const cls = state.busySlots[key] === 'busy' ? 'busy' : state.busySlots[key] === 'free' ? 'free' : '';
+      html += `<div class="tg-cell ${cls}" onclick="toggleCell(this,'${key}')"></div>`;
+    });
+  });
+  grid.innerHTML = html;
+}
+
+function toggleCell(el, key) {
+  const cur = state.busySlots[key] || '';
+  const next = cur === '' ? 'busy' : cur === 'busy' ? 'free' : '';
+  state.busySlots[key] = next;
+  el.className = `tg-cell ${next}`;
+}
+
+function buildExamInputs() {
+  const sel = [...document.querySelectorAll('.subject-chip.sel')].map(e=>e.dataset.subject);
+  const c = document.getElementById('exam-inputs');
+  if (!c) return;
+  c.innerHTML = state.exams.map((ex,i) => examRowHTML(i, ex.subject, ex.name, ex.date)).join('');
+}
+
+function examRowHTML(i, subj='', name='', date='') {
+  const sels = [...document.querySelectorAll('.subject-chip.sel')].map(e=>e.dataset.subject);
+  return `<div style="display:flex;gap:8px;align-items:center;margin-bottom:8px" id="exam-row-${i}">
+    <select style="flex:1" onchange="state.exams[${i}].subject=this.value">
+      <option value="">Subject</option>
+      ${sels.map(s=>`<option value="${s}" ${s===subj?'selected':''}>${s}</option>`).join('')}
+    </select>
+    <input type="text" style="flex:2" placeholder="Event name" value="${name}" onchange="state.exams[${i}].name=this.value">
+    <input type="date" style="flex:1" value="${date}" onchange="state.exams[${i}].date=this.value">
+    <button class="btn btn-danger btn-xs" onclick="removeExam(${i})">✕</button>
+  </div>`;
+}
+
+function addExamRow() {
+  state.exams.push({ subject:'', name:'', date:'' });
+  buildExamInputs();
+}
+
+function removeExam(i) {
+  state.exams.splice(i, 1);
+  buildExamInputs();
+}
+
+function completeOnboarding() {
+  const name = document.getElementById('onb-name').value.trim() || 'Student';
+  const year = document.getElementById('onb-year').value;
+  const peak = document.getElementById('onb-peak').value;
+  const selectedSubjects = [...document.querySelectorAll('.subject-chip.sel')].map(e=>e.dataset.subject);
+
+  if (!selectedSubjects.length) { showToast('⚠️ Please select at least one subject.', 'amber'); return; }
+
+  // Gather credits
+  const credits = {};
+  selectedSubjects.forEach(s => {
+    const inp = document.getElementById(`cr-${s.replace(/[^a-z]/gi,'_')}`);
+    credits[s] = inp ? parseInt(inp.value)||3 : 3;
+  });
+
+  state.profile = { name, year, peak, credits };
+  state.subjects = selectedSubjects;
+
+  // Init mastery
+  selectedSubjects.forEach(s => {
+    if (!state.mastery[s]) {
+      const conf = state.confidence[s] || 3;
+      state.mastery[s] = Math.min(60, conf * 12 + Math.random()*5);
+    }
+  });
+
+  saveState();
+  hideOnboarding();
+  renderApp();
+  showToast(`🚀 Welcome, ${name}! Your study plan is ready.`, 'amber');
+}
+
+function hideOnboarding() {
+  document.getElementById('onboarding-overlay').style.display = 'none';
+}
+
+// ============================================================
+//  APP RENDER
+// ============================================================
+function renderApp() {
+  const name = state.profile?.name || 'Student';
+  document.getElementById('greeting-name').textContent = name;
+
+  // Populate subject dropdowns
+  populateSubjectDropdowns();
+
+  // Generate timetable if none
+  if (!state.timetable.length && state.subjects.length) {
+    state.timetable = generateTimetable();
+    saveState();
+  }
+
+  renderDashboard();
+  renderTimetable();
+  renderProgress();
+  renderConcepts();
+  renderExamList();
+}
+
+function populateSubjectDropdowns() {
+  const selects = ['quiz-subject','hw-subject-ctx','modal-exam-subject'];
+  selects.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const hasRandom = id === 'quiz-subject';
+    el.innerHTML = (hasRandom ? '<option value="random">🎲 Random (weak areas first)</option>' : '<option value="">Auto-detect</option>') +
+      state.subjects.map(s=>`<option value="${s}">${SUBJECT_META[s]?.icon||''} ${s}</option>`).join('');
+  });
+}
+
+// ============================================================
+//  NAVIGATION
+// ============================================================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${page}`)?.classList.add('active');
+  document.querySelector(`.nav-item[onclick*="${page}"]`)?.classList.add('active');
+
+  const titles = {
+    dashboard: 'Dashboard',
+    timetable: '📅 Timetable',
+    progress: '📈 Progress',
+    concepts: '📚 Concept Library',
+    quiz: '🎯 Practice Tests',
+    companion: '🤖 AI Companion',
+    homework: '✏️ Homework Helper',
+  };
+  document.getElementById('page-title').textContent = titles[page] || page;
+
+  // Lazy renders
+  if (page === 'progress') renderProgressCharts();
+  if (page === 'companion') {
+    // Don't show sidebar padding for companion
+  }
+  if (page === 'quiz') resetQuizSetupUI();
+
+  // Close mobile sidebar
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+// ============================================================
+//  DASHBOARD
+// ============================================================
+function renderDashboard() {
+  if (!state.profile) return;
+
+  // Stats
+  document.getElementById('stat-streak').textContent = state.streak;
+  document.getElementById('sidebar-streak').textContent = state.streak;
+  document.getElementById('streak-badge').textContent = `🔥 ${state.streak}-day streak`;
+
+  const testCount = state.testHistory.length;
+  document.getElementById('stat-tests').textContent = testCount;
+
+  const avgScore = testCount ? Math.round(state.testHistory.reduce((a,t)=>a+t.score,0)/testCount) : null;
+  document.getElementById('stat-avg').textContent = avgScore !== null ? `${avgScore}%` : '—';
+
+  const gpa = calcGPA();
+  document.getElementById('stat-gpa').textContent = gpa || '—';
+
+  // Badges
+  const weakAreas = getWeakAreas();
+  document.getElementById('weak-areas-badge').textContent = `⚠️ ${weakAreas.length} weak areas`;
+
+  const todaySlots = getTodaySessions();
+  document.getElementById('today-sessions-badge').textContent = `📅 ${todaySlots.length} sessions today`;
+
+  // Today's schedule
+  renderTodaySchedule(todaySlots);
+
+  // Weak areas
+  const wal = document.getElementById('weak-areas-list');
+  wal.innerHTML = weakAreas.length ? weakAreas.slice(0,5).map(w => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div style="color:${SUBJECT_META[w.subject]?.color};font-size:1rem">${SUBJECT_META[w.subject]?.icon||'📚'}</div>
+      <div style="flex:1">
+        <div style="font-size:0.85rem;font-weight:500">${w.subject}</div>
+        <div class="prog-bar-wrap" style="margin-top:4px">
+          <div class="prog-bar-fill fill-amber" style="width:${w.pct}%"></div>
+        </div>
+      </div>
+      <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--red)">${Math.round(w.pct)}%</div>
+    </div>
+  `).join('') : '<div style="color:var(--text-muted);padding:20px 0;text-align:center;font-size:0.85rem">No weak areas detected yet! Keep taking tests.</div>';
+
+  // Mastery
+  const dml = document.getElementById('dash-mastery-list');
+  dml.innerHTML = state.subjects.map(s => {
+    const pct = Math.round(state.mastery[s] || 40);
+    const fill = pct >= 70 ? 'fill-green' : pct >= 50 ? 'fill-amber' : 'fill-violet';
+    return `<div class="subject-mastery-row">
+      <div class="sm-name">${SUBJECT_META[s]?.icon||''} ${s}</div>
+      <div class="sm-bar"><div class="prog-bar-wrap"><div class="prog-bar-fill ${fill}" style="width:${pct}%"></div></div></div>
+      <div class="sm-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+
+  // Upcoming sessions
+  renderUpcomingSessions();
+}
+
+function getWeakAreas() {
+  return state.subjects
+    .map(s => ({ subject: s, pct: state.mastery[s] || 40 }))
+    .filter(w => w.pct < 65)
+    .sort((a,b) => a.pct - b.pct);
+}
+
+function calcGPA() {
+  if (!state.testHistory.length) return null;
+  const avg = state.testHistory.reduce((a,t)=>a+t.score,0)/state.testHistory.length;
+  if (avg >= 90) return '3.9';
+  if (avg >= 80) return '3.4';
+  if (avg >= 70) return '2.8';
+  if (avg >= 60) return '2.2';
+  return '1.8';
+}
+
+function getTodaySessions() {
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const today = days[new Date().getDay()];
+  return state.timetable.filter(s => s.day === today);
+}
+
+function renderTodaySchedule(sessions) {
+  const c = document.getElementById('today-schedule');
+  if (!sessions.length) {
+    c.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;margin-top:8px">No sessions scheduled for today. Relax or add study time!</div>';
+    return;
+  }
+  c.innerHTML = sessions.slice(0,4).map(s => {
+    const m = SUBJECT_META[s.subject] || {};
+    return `<div class="schedule-block">
+      <div class="sblock-time">${s.time}</div>
+      <div class="sblock-dot" style="background:${m.color}"></div>
+      <div class="sblock-label">${s.subject}: ${s.topic}</div>
+      <span class="badge badge-amber" style="font-size:0.65rem">${s.duration}min</span>
+    </div>`;
+  }).join('');
+}
+
+function renderUpcomingSessions() {
+  const c = document.getElementById('upcoming-sessions');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const todayIdx = new Date().getDay();
+  const upcoming = [];
+  for (let offset=0; offset<7; offset++) {
+    const dayIdx = (todayIdx + offset) % 7;
+    const dayName = days[dayIdx];
+    const dayLabel = offset === 0 ? 'Today' : offset === 1 ? 'Tomorrow' : dayName;
+    state.timetable.filter(s=>s.day===dayName).forEach(s => {
+      upcoming.push({ ...s, dayLabel });
+    });
+  }
+  c.innerHTML = upcoming.slice(0,6).map(s => {
+    const m = SUBJECT_META[s.subject] || {};
+    return `<div class="schedule-block">
+      <div class="sblock-time">${s.dayLabel} · ${s.time}</div>
+      <div class="sblock-dot" style="background:${m.color}"></div>
+      <div class="sblock-label">${s.subject}: ${s.topic}</div>
+      <span class="badge badge-teal" style="font-size:0.65rem">${s.duration}min</span>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+//  TIMETABLE GENERATION
+// ============================================================
+function generateTimetable() {
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const subjects = state.subjects;
+  if (!subjects.length) return [];
+
+  const credits = state.profile?.credits || {};
+  const totalCredits = subjects.reduce((a,s)=>a+(credits[s]||3),0);
+
+  const topics = {
+    'Applied Physics': ['Newton\'s Laws','Thermodynamics','Wave Mechanics','Electromagnetism','Vector Diagrams','Lab: Oscilloscope','Problem Set Review'],
+    'ICT': ['Information Theory','Signal Processing','Basic Electronics','Network Fundamentals','Data Encoding'],
+    'C++ Programming': ['Pointers & References','Classes & OOP','Templates','STL Containers','File I/O','Debugging Lab'],
+    'Calculus': ['Limits & Continuity','Derivatives','Integration by Parts','Multivariable Calculus','Series & Sequences'],
+    'Linear Algebra': ['Matrix Operations','Vector Spaces','Eigenvalues','Linear Transformations','Orthogonality'],
+    'Differential Equations': ['First-Order ODEs','Second-Order ODEs','Laplace Transforms','Systems of ODEs','Phase Portraits'],
+    'Circuit Analysis': ['KVL/KCL','Thevenin/Norton','AC Analysis','Transient Response','Lab: Multimeter','Frequency Response'],
+  };
+
+  const sessions = [];
+  const timeSlots = ['08:00','09:30','11:00','14:00','15:30','17:00','19:00','20:30'];
+  const peak = state.profile?.peak || 'morning';
+  const prioritySlots = peak === 'morning' ? ['08:00','09:30','11:00'] :
+                        peak === 'afternoon' ? ['14:00','15:30','17:00'] :
+                        peak === 'evening' ? ['17:00','19:00','20:30'] :
+                        ['19:00','20:30','22:00'];
+
+  // Allocate sessions proportionally
+  subjects.forEach(s => {
+    const cr = credits[s] || 3;
+    const sessionsPerWeek = Math.round((cr / totalCredits) * 14) + 1;
+    const subjTopics = topics[s] || ['Study Session'];
+    let topicIdx = 0;
+
+    for (let i=0; i<sessionsPerWeek; i++) {
+      const dayIdx = (subjects.indexOf(s) * 2 + i) % 7;
+      const day = days[dayIdx];
+
+      // Check not busy
+      const slotHour = prioritySlots[i % prioritySlots.length] || timeSlots[i % timeSlots.length];
+      const dayIdxNum = days.indexOf(day);
+      const busyKey = `${dayIdxNum}_${slotHour}`;
+      const timeToUse = state.busySlots[busyKey] === 'busy' ? timeSlots[(i+3)%timeSlots.length] : slotHour;
+
+      const mastery = state.mastery[s] || 40;
+      const duration = mastery < 50 ? 90 : mastery < 70 ? 60 : 45;
+
+      sessions.push({
+        id: `${s}-${i}`,
+        day,
+        time: timeToUse,
+        subject: s,
+        topic: subjTopics[topicIdx % subjTopics.length],
+        duration,
+        color: SUBJECT_META[s]?.color || '#888',
+      });
+      topicIdx++;
+    }
+  });
+
+  return sessions;
+}
+
+function regenerateTimetable() {
+  state.timetable = generateTimetable();
+  saveState();
+  renderTimetable();
+  showToast('🔄 Timetable regenerated!', 'amber');
+}
+
+function renderTimetable() {
+  const grid = document.getElementById('timetable-grid');
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const hours = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+
+  // Headers
+  let html = '<div class="tt-header"></div>' + days.map(d=>`<div class="tt-header">${d}</div>`).join('');
+
+  hours.forEach(hr => {
+    html += `<div class="tt-time">${hr}</div>`;
+    days.forEach(day => {
+      const session = state.timetable.find(s=>s.day===day && s.time===hr);
+      if (session) {
+        const m = SUBJECT_META[session.subject] || {};
+        html += `<div class="tt-slot" title="${session.subject}: ${session.topic}">
+          <div class="tt-event" style="background:${m.color}1a;border-left:3px solid ${m.color}" onclick="showSessionDetail('${session.id}')">
+            <div style="font-size:0.68rem;font-weight:700;color:${m.color}">${m.icon||''} ${session.subject.split(' ')[0]}</div>
+            <div style="font-size:0.62rem;color:var(--text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${session.topic}</div>
+          </div>
+        </div>`;
+      } else {
+        html += `<div class="tt-slot"></div>`;
+      }
+    });
+  });
+
+  grid.innerHTML = html;
+
+  // Legend
+  const leg = document.getElementById('tt-legend');
+  leg.innerHTML = state.subjects.map(s => {
+    const m = SUBJECT_META[s] || {};
+    return `<div style="display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text-secondary)">
+      <div style="width:12px;height:12px;border-radius:2px;background:${m.color}40;border:1px solid ${m.color}80"></div>
+      ${s}
+    </div>`;
+  }).join('');
+}
+
+function showCrunchMode() {
+  showToast('🔥 Exam Crunch Mode activated! Timetable rebalanced for intensive revision.', 'amber');
+  document.getElementById('crunch-badge').style.display = 'flex';
+}
+
+// ============================================================
+//  EXAM LIST
+// ============================================================
+function renderExamList() {
+  const c = document.getElementById('exam-list');
+  if (!c) return;
+  if (!state.exams.length) {
+    c.innerHTML = '<div style="color:var(--text-muted);padding:16px 0;font-size:0.85rem">No exams added yet.</div>';
+    return;
+  }
+  c.innerHTML = state.exams.map((ex,i) => {
+    if (!ex.name) return '';
+    const daysLeft = ex.date ? Math.ceil((new Date(ex.date)-new Date())/(1000*86400)) : null;
+    const urgency = daysLeft !== null ? (daysLeft<=7?'badge-red':daysLeft<=14?'badge-amber':'badge-teal') : 'badge-teal';
+    return `<div class="schedule-block">
+      <div class="sblock-dot" style="background:${SUBJECT_META[ex.subject]?.color||'var(--amber)'}"></div>
+      <div class="sblock-label">${ex.subject}: ${ex.name}</div>
+      <span class="badge ${urgency}">${ex.date ? (daysLeft >= 0 ? `${daysLeft}d left` : 'Past') : 'TBD'}</span>
+    </div>`;
+  }).join('');
+}
+
+function openExamModal() {
+  document.getElementById('exam-modal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id)?.classList.remove('open');
+}
+
+function addExamFromModal() {
+  const subj = document.getElementById('modal-exam-subject').value;
+  const name = document.getElementById('modal-exam-name').value;
+  const date = document.getElementById('modal-exam-date').value;
+  if (!name) { showToast('Please enter an event name.','amber'); return; }
+  state.exams.push({ subject: subj, name, date });
+  saveState();
+  closeModal('exam-modal');
+  renderExamList();
+  showToast('✅ Deadline added!', 'amber');
+}
+
+// ============================================================
+//  PROGRESS
+// ============================================================
+let progChart = null, radarChart = null;
+
+function renderProgress() {
+  const ml = document.getElementById('mastery-list');
+  if (!ml) return;
+  ml.innerHTML = state.subjects.map(s => {
+    const pct = Math.round(state.mastery[s] || 40);
+    const fill = pct >= 70 ? 'fill-green' : pct >= 50 ? 'fill-amber' : 'fill-violet';
+    const badge = pct >= 70 ? 'badge-green' : pct >= 50 ? 'badge-amber' : 'badge-red';
+    return `<div class="subject-mastery-row">
+      <div class="sm-name">${SUBJECT_META[s]?.icon||''} ${s}</div>
+      <div class="sm-bar"><div class="prog-bar-wrap"><div class="prog-bar-fill ${fill}" style="width:${pct}%"></div></div></div>
+      <div class="sm-pct">${pct}%</div>
+      <span class="badge ${badge}">${pct>=70?'Strong':pct>=50?'Developing':'Weak'}</span>
+    </div>`;
+  }).join('');
+
+  const gpa = calcGPA();
+  document.getElementById('gpa-display').textContent = gpa || '—';
+  document.getElementById('gpa-advice').textContent = gpa
+    ? `Based on your test performance, you're projected for a ${gpa} GPA. ${parseFloat(gpa)>=3.5?'Excellent work! Maintain consistency.':parseFloat(gpa)>=2.5?'Good progress. Focus on weak areas to push higher.':'Keep practicing daily. Consistent effort will improve your grades significantly.'}`
+    : 'Complete some practice tests to see your GPA estimate.';
+
+  const mistakes = state.testHistory.flatMap(t=>t.mistakes||[]);
+  const topicCounts = {};
+  mistakes.forEach(m => { topicCounts[m] = (topicCounts[m]||0)+1; });
+  const topMistakes = Object.entries(topicCounts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  document.getElementById('topic-mistakes').innerHTML = topMistakes.length
+    ? `<b style="color:var(--text-primary)">Common mistake areas:</b> ${topMistakes.map(([t,c])=>`<span class="badge badge-red" style="margin:2px">${t} ×${c}</span>`).join('')}`
+    : 'No mistake data yet. Take some practice tests!';
+}
+
+function renderProgressCharts() {
+  // Line chart
+  const canvas = document.getElementById('progress-chart');
+  if (!canvas) return;
+  if (progChart) { progChart.destroy(); progChart = null; }
+
+  const labels = state.testHistory.slice(-8).map((_,i)=>`Test ${i+1}`);
+  const data = state.testHistory.slice(-8).map(t=>t.score);
+  if (!data.length) { labels.push('—'); data.push(0); }
+
+  progChart = new Chart(canvas.getContext('2d'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Score %',
+        data,
+        borderColor: '#f5a623',
+        backgroundColor: 'rgba(245,166,35,0.1)',
+        tension: 0.4,
+        fill: true,
+        pointBackgroundColor: '#f5a623',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min:0, max:100, ticks: { color:'#9aa0b0', font:{size:11} }, grid: { color:'rgba(255,255,255,0.05)' } },
+        x: { ticks: { color:'#9aa0b0', font:{size:11} }, grid: { color:'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+
+  // Radar chart
+  const rCanvas = document.getElementById('radar-chart');
+  if (radarChart) { radarChart.destroy(); radarChart = null; }
+  radarChart = new Chart(rCanvas.getContext('2d'), {
+    type: 'radar',
+    data: {
+      labels: state.subjects.map(s=>s.split(' ')[0]),
+      datasets: [{
+        label: 'Mastery %',
+        data: state.subjects.map(s=>Math.round(state.mastery[s]||40)),
+        borderColor: '#3dd6d0',
+        backgroundColor: 'rgba(61,214,208,0.15)',
+        pointBackgroundColor: '#3dd6d0',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        r: {
+          min:0, max:100,
+          ticks: { color:'#9aa0b0', backdropColor:'transparent', stepSize:25 },
+          grid: { color:'rgba(255,255,255,0.06)' },
+          pointLabels: { color:'#9aa0b0', font:{size:11} }
+        }
+      }
+    }
+  });
+}
+
+// ============================================================
+//  CONCEPTS
+// ============================================================
+const CONCEPTS = {
+  'Applied Physics': [
+    { title:"Newton's Laws of Motion", difficulty:'Fundamental', summary:"F=ma, action-reaction, inertia. Foundation of classical mechanics." },
+    { title:"Electromagnetic Induction", difficulty:'Intermediate', summary:"Faraday's law, Lenz's law. Changing flux induces EMF." },
+    { title:"Thermodynamic Cycles", difficulty:'Hard', summary:"Carnot, Rankine, Otto cycles. PV diagrams and efficiency analysis." },
+  ],
+  'Calculus': [
+    { title:"Integration by Parts", difficulty:'Intermediate', summary:"∫u dv = uv − ∫v du. Essential for products of functions." },
+    { title:"L'Hôpital's Rule", difficulty:'Intermediate', summary:"Evaluate 0/0 and ∞/∞ indeterminate forms by differentiating numerator and denominator." },
+    { title:"Taylor Series", difficulty:'Hard', summary:"Approximate functions as infinite polynomial sums. Power series expansion around a point." },
+    { title:"Multivariable Chain Rule", difficulty:'Hard', summary:"Partial derivatives, gradient vectors, total differential." },
+  ],
+  'Linear Algebra': [
+    { title:"Eigenvalues & Eigenvectors", difficulty:'Hard', summary:"det(A-λI)=0. Diagonalization, principal component analysis." },
+    { title:"Gram-Schmidt Process", difficulty:'Intermediate', summary:"Orthogonalize a set of vectors to get an orthonormal basis." },
+    { title:"Matrix Rank & Null Space", difficulty:'Intermediate', summary:"Row reduction, pivot columns, dimension theorem." },
+  ],
+  'Differential Equations': [
+    { title:"Separation of Variables", difficulty:'Fundamental', summary:"Rearrange dy/dx = f(x)g(y) and integrate both sides." },
+    { title:"Laplace Transform", difficulty:'Hard', summary:"L{f(t)} = ∫₀^∞ e^{-st}f(t)dt. Converts ODEs to algebraic equations." },
+    { title:"Second-Order Linear ODEs", difficulty:'Intermediate', summary:"Characteristic equation, complementary and particular solutions." },
+  ],
+  'Circuit Analysis': [
+    { title:"Kirchhoff's Laws", difficulty:'Fundamental', summary:"KVL: sum of voltages = 0. KCL: sum of currents = 0. Foundation of circuit analysis." },
+    { title:"Thevenin's Theorem", difficulty:'Intermediate', summary:"Any linear circuit = one voltage source + one series resistor." },
+    { title:"AC Phasors", difficulty:'Hard', summary:"Represent sinusoidal signals as complex numbers. Impedance = R + jX." },
+  ],
+  'C++ Programming': [
+    { title:"Pointers & Memory Management", difficulty:'Intermediate', summary:"Raw pointers, new/delete, dangling pointers, smart pointers." },
+    { title:"Object-Oriented Design", difficulty:'Intermediate', summary:"Classes, inheritance, polymorphism, encapsulation." },
+    { title:"STL & Templates", difficulty:'Hard', summary:"vector, map, sort, generic programming with templates." },
+  ],
+  'ICT': [
+    { title:"Shannon's Information Theory", difficulty:'Hard', summary:"Entropy H=-Σp log p. Channel capacity, data compression bounds." },
+    { title:"Signal Sampling & Nyquist", difficulty:'Intermediate', summary:"Sample rate ≥ 2× max frequency. Aliasing and reconstruction." },
+  ],
+};
+
+let conceptFilter = 'All';
+let conceptSearchTerm = '';
+
+function renderConcepts() {
+  // Subject filter tabs
+  const tabsEl = document.getElementById('concept-subject-tabs');
+  if (!tabsEl) return;
+  const subjects = ['All', ...state.subjects];
+  tabsEl.innerHTML = subjects.map(s => `
+    <div class="tab ${conceptFilter===s?'active':''}" onclick="filterConceptsBySubject('${s}')">${s==='All'?'All Topics':(SUBJECT_META[s]?.icon||'')+ ' '+s}</div>
+  `).join('');
+
+  const grid = document.getElementById('concepts-grid');
+  const allConcepts = [];
+  (conceptFilter==='All' ? state.subjects : [conceptFilter]).forEach(s => {
+    (CONCEPTS[s]||[]).forEach(c => allConcepts.push({...c, subject:s}));
+  });
+
+  const filtered = allConcepts.filter(c =>
+    !conceptSearchTerm || c.title.toLowerCase().includes(conceptSearchTerm.toLowerCase())
+  );
+
+  grid.innerHTML = filtered.map(c => {
+    const m = SUBJECT_META[c.subject] || {};
+    const diffColor = c.difficulty==='Fundamental'?'badge-green':c.difficulty==='Intermediate'?'badge-amber':'badge-red';
+    return `<div class="concept-card" onclick="openConcept('${c.subject}','${encodeURIComponent(c.title)}')">
+      <div class="cc-header">
+        <div class="cc-icon" style="background:${m.color}18;color:${m.color}">${m.icon||'📚'}</div>
+        <div>
+          <div style="font-weight:600;font-size:0.9rem">${c.title}</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px">${c.subject}</div>
+        </div>
+      </div>
+      <div class="cc-body">${c.summary}</div>
+      <div class="cc-footer">
+        <span class="badge ${diffColor}">${c.difficulty}</span>
+        <button class="btn btn-outline btn-xs">Study →</button>
+      </div>
+    </div>`;
+  }).join('') || '<div style="color:var(--text-muted);padding:20px;grid-column:1/-1;text-align:center">No concepts found.</div>';
+}
+
+function filterConceptsBySubject(s) {
+  conceptFilter = s;
+  renderConcepts();
+}
+
+function filterConcepts(term) {
+  conceptSearchTerm = term;
+  renderConcepts();
+}
+
+async function openConcept(subject, titleEnc) {
+  const title = decodeURIComponent(titleEnc);
+  document.getElementById('concepts-grid').style.display = 'none';
+  document.getElementById('concept-subject-tabs').style.display = 'none';
+  document.getElementById('concept-detail').style.display = 'block';
+
+  const card = document.getElementById('concept-detail-card');
+  const m = SUBJECT_META[subject] || {};
+  card.innerHTML = `
+    <div style="border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="font-size:2rem">${m.icon||'📚'}</div>
+        <div>
+          <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700">${title}</div>
+          <div class="badge badge-teal" style="margin-top:4px">${subject}</div>
+        </div>
+      </div>
+    </div>
+    <div id="concept-ai-content" class="ai-content">
+      <div style="text-align:center;padding:30px 0">
+        <div class="thinking-dots"><span></span><span></span><span></span></div>
+        <div style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;font-family:var(--font-mono)">Loading explanation...</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-amber btn-sm" onclick="generatePracticeForConcept('${subject}','${titleEnc}')">🎯 Practice This</button>
+      <button class="btn btn-outline btn-sm" onclick="askCompanion('Explain ${title} in more detail')">🤖 Ask Companion</button>
+    </div>
+  `;
+
+  // Fetch AI explanation
+  try {
+    const explanation = await callAI(`You are an expert engineering tutor. Explain "${title}" (subject: ${subject}) to a struggling engineering student.
+
+Format your response in clear sections:
+## Overview
+Brief plain-English intro
+
+## Key Concepts
+Essential points with numbered list
+
+## Core Formula(s)
+Show the main formula(s) using LaTeX notation like $E = mc^2$ inline or $$E = mc^2$$ for display
+
+## Worked Example
+One complete step-by-step worked example
+
+## Common Mistakes
+What students often get wrong
+
+## Quick Tip
+One memorable insight
+
+Keep it comprehensive but digestible. Use LaTeX for all math.`, 1500);
+
+    document.getElementById('concept-ai-content').innerHTML = renderMarkdown(explanation);
+    renderMath();
+    hljs.highlightAll();
+  } catch(e) {
+    document.getElementById('concept-ai-content').innerHTML = `<div style="color:var(--text-muted)">Could not load explanation. Please try again.</div>`;
+  }
+}
+
+function closeConcept() {
+  document.getElementById('concepts-grid').style.display = '';
+  document.getElementById('concept-subject-tabs').style.display = '';
+  document.getElementById('concept-detail').style.display = 'none';
+}
+
+function generatePracticeForConcept(subject, titleEnc) {
+  const title = decodeURIComponent(titleEnc);
+  document.getElementById('quiz-subject').value = subject;
+  showPage('quiz');
+  showToast(`Generating practice for: ${title}`, 'teal');
+}
+
+function askCompanion(prompt) {
+  showPage('companion');
+  document.getElementById('chat-input').value = prompt;
+  sendChat();
+}
+
+// ============================================================
+//  QUIZ
+// ============================================================
+let quizData = [];
+let quizIdx = 0;
+let quizAnswers = [];
+let quizTimerInterval = null;
+let quizSecondsLeft = 0;
+let markedForReview = new Set();
+
+const QUESTION_BANK = {
+  'Applied Physics': [
+    {
+      q: "A 5 kg block is on a frictionless surface. A force of 20 N is applied horizontally. What is the acceleration?",
+      type: "mcq",
+      options: ["2 m/s²", "4 m/s²", "10 m/s²", "100 m/s²"],
+      correct: 1,
+      hint: "Use Newton's Second Law: F = ma",
+      explanation: "Using F=ma: a = F/m = 20/5 = 4 m/s²",
+      topic: "Newton's Laws"
+    },
+    {
+      q: "Which of the following is NOT conserved in an inelastic collision?",
+      type: "mcq",
+      options: ["Momentum", "Energy", "Mass", "Charge"],
+      correct: 1,
+      hint: "Think about what 'inelastic' means — energy is converted to other forms",
+      explanation: "Kinetic energy is NOT conserved in inelastic collisions. Momentum is always conserved.",
+      topic: "Collisions"
+    },
+    {
+      q: "State Faraday's Law of Electromagnetic Induction and explain what each term represents.",
+      type: "open",
+      hint: "EMF is related to the rate of change of magnetic flux",
+      correct_key: "faraday",
+      explanation: "Faraday's Law: EMF = -dΦ/dt. The induced EMF equals the negative rate of change of magnetic flux. The negative sign (Lenz's law) means the induced current opposes the change.",
+      topic: "Electromagnetism"
+    },
+  ],
+  'Calculus': [
+    {
+      q: "Evaluate: $\\int x \\cdot e^x \\, dx$",
+      type: "open",
+      hint: "Use integration by parts: ∫u dv = uv - ∫v du. Choose u = x",
+      correct_key: "ibp_xex",
+      explanation: "Using IBP with u=x, dv=eˣdx: du=dx, v=eˣ. Result: xeˣ - eˣ + C = eˣ(x-1) + C",
+      topic: "Integration by Parts"
+    },
+    {
+      q: "What is the limit: $\\lim_{x \\to 0} \\frac{\\sin x}{x}$?",
+      type: "mcq",
+      options: ["0", "1", "∞", "Undefined"],
+      correct: 1,
+      hint: "This is a fundamental limit — consider the squeeze theorem or L'Hôpital",
+      explanation: "This is a standard result: lim(sin x/x) = 1 as x→0. Provable via L'Hôpital or squeeze theorem.",
+      topic: "Limits"
+    },
+    {
+      q: "Find the derivative of $f(x) = x^3 \\ln(x)$.",
+      type: "open",
+      hint: "Apply the product rule: (uv)' = u'v + uv'",
+      correct_key: "deriv_xlnx",
+      explanation: "f'(x) = 3x²·ln(x) + x³·(1/x) = 3x²ln(x) + x² = x²(3ln(x)+1)",
+      topic: "Derivatives"
+    },
+  ],
+  'C++ Programming': [
+    {
+      q: "What is the output of this code?\n```cpp\nint x = 5;\nint* p = &x;\n*p = 10;\ncout << x;\n```",
+      type: "mcq",
+      options: ["5", "10", "Address of x", "Segmentation fault"],
+      correct: 1,
+      hint: "p points to x, so *p dereferences to x",
+      explanation: "*p = 10 writes 10 into the memory location pointed to by p, which is x. So x becomes 10.",
+      topic: "Pointers"
+    },
+    {
+      q: "Explain the difference between `new` and `malloc` in C++, and why memory leaks occur.",
+      type: "open",
+      hint: "Consider constructors, type safety, and what happens if you forget to free memory",
+      correct_key: "new_malloc",
+      explanation: "`new` calls constructors and is type-safe; `malloc` only allocates raw memory. Memory leaks occur when allocated memory is never freed (delete/free not called), causing the program to gradually consume more RAM.",
+      topic: "Memory Management"
+    },
+  ],
+  'Linear Algebra': [
+    {
+      q: "If $\\lambda = 2$ is an eigenvalue of matrix $A$, what does that mean geometrically?",
+      type: "mcq",
+      options: [
+        "Matrix A rotates vectors by 2 degrees",
+        "There exists a non-zero vector v such that Av = 2v (scaled by 2)",
+        "All entries of A are multiplied by 2",
+        "The determinant of A equals 2"
+      ],
+      correct: 1,
+      hint: "Think about what Av = λv means — the vector is only scaled, not rotated",
+      explanation: "An eigenvalue λ=2 means there's a special direction (eigenvector) where the matrix only stretches the vector by factor 2, without changing direction.",
+      topic: "Eigenvalues"
+    },
+  ],
+  'Circuit Analysis': [
+    {
+      q: "In a series circuit with R₁=10Ω, R₂=20Ω, and V=30V, what is the current through R₂?",
+      type: "mcq",
+      options: ["3 A", "1 A", "1.5 A", "0.5 A"],
+      correct: 1,
+      hint: "In a series circuit, total resistance = R₁+R₂. Use Ohm's Law.",
+      explanation: "R_total = 10+20 = 30Ω. I = V/R_total = 30/30 = 1A. Same current flows through all series elements.",
+      topic: "KVL/Ohm's Law"
+    },
+    {
+      q: "Apply Thevenin's theorem to find V_th at terminals A-B of a circuit with a 12V source, a 4Ω series resistor, and a 8Ω parallel resistor.",
+      type: "open",
+      hint: "V_th = open-circuit voltage at A-B. Use voltage divider.",
+      correct_key: "thevenin",
+      explanation: "V_th = 12 × (8/(4+8)) = 12 × (8/12) = 8V. R_th = 4Ω||8Ω = (4×8)/(4+8) = 32/12 = 2.67Ω",
+      topic: "Thevenin's Theorem"
+    },
+  ],
+  'Differential Equations': [
+    {
+      q: "Solve: $\\frac{dy}{dx} = 2xy$, given $y(0) = 3$",
+      type: "open",
+      hint: "Separate variables: dy/y = 2x dx, then integrate both sides",
+      correct_key: "sep_var",
+      explanation: "Separating: dy/y = 2x dx. Integrating: ln|y| = x² + C. So y = Ae^(x²). Using y(0)=3: A=3. Answer: y = 3e^(x²)",
+      topic: "Separation of Variables"
+    },
+  ],
+  'ICT': [
+    {
+      q: "According to the Nyquist-Shannon sampling theorem, to reconstruct a 5 kHz audio signal you must sample at:",
+      type: "mcq",
+      options: ["At least 5 kHz", "At least 10 kHz", "At least 2.5 kHz", "Exactly 5 kHz"],
+      correct: 1,
+      hint: "The theorem says sample rate must be at LEAST twice the maximum signal frequency",
+      explanation: "Nyquist rate = 2 × f_max = 2 × 5kHz = 10kHz minimum. Sampling below this causes aliasing.",
+      topic: "Nyquist Theorem"
+    },
+  ]
+};
+
+function resetQuizSetupUI() {
+  document.getElementById('quiz-setup').style.display = 'block';
+  document.getElementById('quiz-active').style.display = 'none';
+  document.getElementById('quiz-results').style.display = 'none';
+  renderRecentTests();
+}
+
+function renderRecentTests() {
+  const c = document.getElementById('recent-tests-list');
+  if (!c) return;
+  if (!state.testHistory.length) {
+    c.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;padding:20px 0;text-align:center">No tests yet. Generate your first test!</div>';
+    return;
+  }
+  c.innerHTML = state.testHistory.slice(-5).reverse().map(t => `
+    <div class="schedule-block" style="cursor:default">
+      <div style="font-size:0.7rem;font-family:var(--font-mono);color:var(--text-muted);min-width:60px">${t.date||'—'}</div>
+      <div style="flex:1;font-size:0.85rem;font-weight:500">${t.subject||'Mixed'}</div>
+      <div class="badge ${t.score>=70?'badge-green':t.score>=50?'badge-amber':'badge-red'}">${t.score}%</div>
+    </div>
+  `).join('');
+}
+
+async function generateQuiz() {
+  const subject = document.getElementById('quiz-subject').value;
+  const diff = document.getElementById('quiz-diff').value;
+  const count = parseInt(document.getElementById('quiz-count').value);
+  const format = document.getElementById('quiz-format').value;
+  const timerOpt = document.getElementById('quiz-timer-opt').value;
+
+  // Build question pool
+  let pool = [];
+  if (subject === 'random') {
+    // Prioritize weak areas
+    const weak = getWeakAreas().map(w=>w.subject);
+    const order = [...new Set([...weak, ...state.subjects])];
+    order.forEach(s => pool.push(...(QUESTION_BANK[s]||[])));
+  } else {
+    pool = QUESTION_BANK[subject] || [];
+  }
+
+  // Filter by difficulty (simulated — in real app AI generates per difficulty)
+  if (diff === 'easy') pool = pool.filter((_,i)=>i%3===0).concat(pool.slice(0,2));
+  else if (diff === 'hard') pool = pool.filter(q=>q.type==='open').concat(pool);
+
+  // Filter by format
+  if (format === 'mcq') pool = pool.filter(q=>q.type==='mcq');
+  else if (format === 'open') pool = pool.filter(q=>q.type==='open');
+
+  // Shuffle and pick
+  pool = shuffle(pool);
+  quizData = pool.slice(0, Math.min(count, pool.length));
+
+  // If not enough questions, pad with AI-generated placeholders
+  while (quizData.length < Math.min(count, 5)) {
+    quizData.push({
+      q: `[AI-Generated] Solve a ${diff} problem in ${subject === 'random' ? state.subjects[0] : subject}`,
+      type: 'open',
+      hint: 'Think step-by-step and apply the relevant formula.',
+      explanation: 'Review the concept and retry.',
+      topic: subject || 'Mixed'
+    });
+  }
+
+  quizIdx = 0;
+  quizAnswers = new Array(quizData.length).fill(null);
+  markedForReview = new Set();
+
+  document.getElementById('quiz-setup').style.display = 'none';
+  document.getElementById('quiz-active').style.display = 'block';
+  document.getElementById('quiz-results').style.display = 'none';
+  document.getElementById('q-total').textContent = quizData.length;
+  document.getElementById('quiz-hint-area').style.display = 'none';
+
+  // Timer
+  if (timerOpt !== 'none') {
+    quizSecondsLeft = parseInt(timerOpt) * 60;
+    document.getElementById('quiz-timer').style.display = 'flex';
+    quizTimerInterval = setInterval(() => {
+      quizSecondsLeft--;
+      const m = Math.floor(quizSecondsLeft/60).toString().padStart(2,'0');
+      const s = (quizSecondsLeft%60).toString().padStart(2,'0');
+      document.getElementById('quiz-timer').textContent = `${m}:${s}`;
+      if (quizSecondsLeft <= 0) { clearInterval(quizTimerInterval); endQuiz(); }
+    }, 1000);
+  } else {
+    document.getElementById('quiz-timer').style.display = 'none';
+  }
+
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quizData[quizIdx];
+  document.getElementById('q-current').textContent = quizIdx + 1;
+  document.getElementById('quiz-progress-bar').style.width = `${((quizIdx+1)/quizData.length)*100}%`;
+  document.getElementById('q-subject-label').textContent = q.topic || 'Engineering';
+
+  const area = document.getElementById('quiz-question-area');
+  const qText = q.q.replace(/```cpp\n?([\s\S]*?)```/g, (_, code) =>
+    `<div class="code-wrap"><pre><code class="language-cpp">${escapeHtml(code.trim())}</code></pre><span class="code-lang-tag">C++</span></div>`
+  );
+
+  if (q.type === 'mcq') {
+    area.innerHTML = `
+      <div class="quiz-question-card">
+        <div class="quiz-q-num">Question ${quizIdx+1} · Multiple Choice</div>
+        <div class="quiz-q-text ai-content">${qText}</div>
+        <div class="quiz-options">
+          ${q.options.map((opt, i) => `
+            <div class="quiz-option ${quizAnswers[quizIdx]===i?'selected':''}" onclick="selectMCQ(${i})" data-idx="${i}">
+              <div class="quiz-option-letter">${'ABCD'[i]}</div>
+              <div>${opt}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  } else {
+    area.innerHTML = `
+      <div class="quiz-question-card">
+        <div class="quiz-q-num">Question ${quizIdx+1} · Open-Ended</div>
+        <div class="quiz-q-text ai-content">${qText}</div>
+        <div class="form-group" style="margin-top:12px">
+          <label>Your Answer (use math, steps, or text)</label>
+          <textarea id="open-answer" placeholder="Show your work step by step..." style="min-height:120px" oninput="quizAnswers[quizIdx] = this.value">${quizAnswers[quizIdx]||''}</textarea>
+        </div>
+      </div>
+    `;
+  }
+
+  // Re-render math
+  setTimeout(() => { renderMath(); hljs.highlightAll(); }, 50);
+}
+
+function selectMCQ(i) {
+  quizAnswers[quizIdx] = i;
+  document.querySelectorAll('.quiz-option').forEach((el, idx) => {
+    el.classList.toggle('selected', idx === i);
+  });
+}
+
+function skipQuestion() {
+  if (quizIdx < quizData.length - 1) { quizIdx++; renderQuestion(); }
+  else endQuiz();
+}
+
+function markForReview() {
+  markedForReview.add(quizIdx);
+  showToast('🔖 Marked for review', 'amber');
+}
+
+function requestHint() {
+  const q = quizData[quizIdx];
+  document.getElementById('quiz-hint-area').style.display = 'block';
+  document.getElementById('quiz-hint-text').textContent = q.hint || 'Think about the fundamental principle behind this problem.';
+}
+
+async function submitAnswer() {
+  const q = quizData[quizIdx];
+  const userAns = quizAnswers[quizIdx];
+
+  if (userAns === null || userAns === undefined || userAns === '') {
+    showToast('Please enter or select an answer first.', 'amber');
+    return;
+  }
+
+  // Show correct/wrong for MCQ
+  if (q.type === 'mcq') {
+    const opts = document.querySelectorAll('.quiz-option');
+    opts.forEach((el, i) => {
+      el.style.pointerEvents = 'none';
+      if (i === q.correct) el.classList.add('correct');
+      else if (i === userAns) el.classList.add('wrong');
+    });
+
+    const correct = userAns === q.correct;
+    showToast(correct ? '✅ Correct!' : `❌ Correct answer: ${q.options[q.correct]}`, correct ? 'teal' : 'red');
+
+    // Update mastery
+    const subj = state.subjects.find(s => (QUESTION_BANK[s]||[]).some(qq=>qq.q===q.q)) || state.subjects[0];
+    if (correct) state.mastery[subj] = Math.min(100, (state.mastery[subj]||40)+3);
+    else state.mastery[subj] = Math.max(10, (state.mastery[subj]||40)-2);
+
+    await new Promise(r=>setTimeout(r,1200));
+  }
+
+  if (quizIdx < quizData.length - 1) { quizIdx++; renderQuestion(); }
+  else endQuiz();
+}
+
+function endQuiz() {
+  clearInterval(quizTimerInterval);
+  document.getElementById('quiz-active').style.display = 'none';
+  document.getElementById('quiz-results').style.display = 'block';
+
+  // Score
+  const answered = quizData.filter((q,i) => q.type==='mcq' && quizAnswers[i]===q.correct).length;
+  const mcqCount = quizData.filter(q=>q.type==='mcq').length;
+  const openCount = quizData.filter(q=>q.type==='open').length;
+  // Give partial credit for open-ended
+  const openAnswered = quizData.filter((q,i)=>q.type==='open' && quizAnswers[i]?.length>5).length;
+  const totalCorrect = answered + (openAnswered * 0.7);
+  const totalQ = quizData.length;
+  const score = Math.round((totalCorrect/totalQ)*100);
+
+  const emoji = score>=80?'🎉':score>=60?'👍':score>=40?'📚':'💪';
+  document.getElementById('results-emoji').textContent = emoji;
+  document.getElementById('results-score').textContent = `${score}%`;
+  document.getElementById('results-summary').textContent = `${Math.round(totalCorrect)} / ${totalQ} correct · ${mcqCount} MCQ + ${openCount} open-ended`;
+
+  // Save to history
+  const mistakes = quizData
+    .filter((q,i)=>q.type==='mcq' && quizAnswers[i]!==q.correct)
+    .map(q=>q.topic);
+  state.testHistory.push({
+    score,
+    subject: document.getElementById('quiz-subject')?.value || 'Mixed',
+    date: new Date().toLocaleDateString(),
+    mistakes,
+  });
+
+  // Update mastery
+  saveState();
+  renderDashboard();
+  document.getElementById('quiz-badge').textContent = state.testHistory.length;
+}
+
+function reviewAnswers() {
+  const c = document.getElementById('answer-review');
+  c.style.display = 'block';
+  c.innerHTML = quizData.map((q,i)=>{
+    const userAns = quizAnswers[i];
+    const correct = q.type==='mcq' ? userAns===q.correct : null;
+    const statusClass = q.type==='mcq' ? (correct?'badge-green':'badge-red') : 'badge-amber';
+    const status = q.type==='mcq' ? (correct?'✅ Correct':'❌ Wrong') : '📝 Open-ended';
+    return `<div class="card" style="margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span class="badge ${statusClass}">${status}</span>
+        <span style="font-size:0.72rem;font-family:var(--font-mono);color:var(--text-muted)">${q.topic||''}</span>
+      </div>
+      <div class="ai-content" style="margin-bottom:10px;font-size:0.875rem">${q.q}</div>
+      ${q.type==='mcq' ? `
+        <div style="font-size:0.82rem;margin-bottom:6px"><span style="color:var(--text-muted)">Your answer:</span> <span style="${correct?'color:var(--green)':'color:var(--red)'}">${q.options?.[userAns]||'—'}</span></div>
+        ${!correct?`<div style="font-size:0.82rem;margin-bottom:8px"><span style="color:var(--text-muted)">Correct:</span> <span style="color:var(--green)">${q.options?.[q.correct]}</span></div>`:''}
+      ` : `<div style="font-size:0.82rem;margin-bottom:8px;color:var(--text-secondary)">Your answer: ${userAns||'(no answer)'}</div>`}
+      <div style="background:var(--bg-1);border-left:3px solid var(--teal);padding:10px 14px;border-radius:0 6px 6px 0;font-size:0.82rem;color:var(--text-secondary)">${q.explanation||''}</div>
+    </div>`;
+  }).join('');
+  setTimeout(()=>{ renderMath(); },50);
+}
+
+function resetQuiz() {
+  document.getElementById('quiz-results').style.display = 'none';
+  document.getElementById('answer-review').style.display = 'none';
+  resetQuizSetupUI();
+}
+
+// ============================================================
+//  AI COMPANION CHAT
+// ============================================================
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('quick-prompts')?.remove();
+
+  appendChatBubble('user', msg);
+
+  const mode = document.getElementById('companion-mode').value;
+  const systemPrompt = buildCompanionSystem(mode);
+
+  const thinkingId = appendThinking();
+
+  try {
+    state.chatHistory.push({ role:'user', content: msg });
+
+    const messages = state.chatHistory.slice(-10);
+    const response = await callAI(systemPrompt, 1200, messages);
+
+    removeThinking(thinkingId);
+    state.chatHistory.push({ role:'assistant', content: response });
+    saveState();
+
+    appendChatBubble('ai', response);
+  } catch(e) {
+    removeThinking(thinkingId);
+    appendChatBubble('ai', '⚠️ I had trouble connecting. Please try again in a moment.');
+  }
+}
+
+function buildCompanionSystem(mode) {
+  const subjects = state.subjects.join(', ');
+  const base = `You are EngiMentor, an expert AI tutor for engineering students studying: ${subjects}. 
+The student may be struggling with these subjects. Be encouraging, precise, and educational.
+Use LaTeX for math ($inline$ and $$display$$). Use markdown formatting. Use code blocks for C++.`;
+
+  if (mode === 'tutor') return base + '\nExplain concepts clearly with examples, analogies, and formulas. Break down complex topics.';
+  if (mode === 'socratic') return base + '\nUse the Socratic method — ask guiding questions instead of giving direct answers. Help the student discover the solution themselves.';
+  if (mode === 'direct') return base + '\nGive direct, concise answers. Minimal explanation unless asked.';
+  if (mode === 'checker') return base + '\nThe student will share their work. Carefully identify any errors, explain what went wrong, and show the correct approach. Be specific about the exact mistake location.';
+  return base;
+}
+
+function appendChatBubble(role, text) {
+  const c = document.getElementById('chat-messages');
+  const wrap = document.createElement('div');
+  wrap.style.display = 'flex';
+  wrap.style.flexDirection = 'column';
+  wrap.style.alignItems = role === 'user' ? 'flex-end' : 'flex-start';
+
+  const bubble = document.createElement('div');
+  bubble.className = `chat-bubble ${role === 'user' ? 'chat-user' : 'chat-ai'}`;
+
+  const roleLabel = document.createElement('div');
+  roleLabel.className = 'chat-role';
+  roleLabel.textContent = role === 'user' ? 'You' : '🤖 EngiMentor';
+  bubble.appendChild(roleLabel);
+
+  const content = document.createElement('div');
+  content.className = 'ai-content';
+  content.innerHTML = renderMarkdown(text);
+  bubble.appendChild(content);
+
+  wrap.appendChild(bubble);
+  c.appendChild(wrap);
+  c.scrollTop = c.scrollHeight;
+
+  setTimeout(()=>{ renderMath(); hljs.highlightAll(); }, 50);
+}
+
+function appendThinking() {
+  const c = document.getElementById('chat-messages');
+  const id = 'thinking-' + Date.now();
+  const el = document.createElement('div');
+  el.id = id;
+  el.style.display = 'flex';
+  el.innerHTML = `<div class="chat-bubble chat-ai"><div class="chat-role">🤖 EngiMentor</div><div class="thinking-dots"><span></span><span></span><span></span></div></div>`;
+  c.appendChild(el);
+  c.scrollTop = c.scrollHeight;
+  return id;
+}
+
+function removeThinking(id) {
+  document.getElementById(id)?.remove();
+}
+
+function clearChat() {
+  state.chatHistory = [];
+  saveState();
+  const c = document.getElementById('chat-messages');
+  c.innerHTML = `<div style="text-align:center;padding:40px 20px;color:var(--text-muted);font-size:0.875rem">Chat cleared. Start a new conversation!</div>`;
+}
+
+function quickPrompt(text) {
+  document.getElementById('chat-input').value = text;
+  sendChat();
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+}
+
+function toggleVoice() {
+  if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    showToast('Voice input not supported in this browser', 'amber'); return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const r = new SR();
+  r.onresult = e => { document.getElementById('chat-input').value = e.results[0][0].transcript; };
+  r.start();
+  showToast('🎙 Listening...', 'teal');
+}
+
+// ============================================================
+//  HOMEWORK HELPER
+// ============================================================
+let hwTab = 'text';
+
+function switchHwTab(tab, el) {
+  hwTab = tab;
+  ['text','latex','code','photo'].forEach(t => {
+    document.getElementById(`hw-${t}-input`).style.display = t===tab?'block':'none';
+  });
+  document.querySelectorAll('#hw-input-tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// LaTeX live preview
+document.addEventListener('DOMContentLoaded', () => {
+  const ltx = document.getElementById('hw-latex');
+  if (ltx) {
+    ltx.addEventListener('input', () => {
+      const prev = document.getElementById('hw-latex-preview');
+      try {
+        katex.render(ltx.value, prev, { throwOnError: false, displayMode: true });
+      } catch(e) {}
+    });
+  }
+});
+
+function handleHwFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('hw-file-preview');
+    prev.style.display = 'block';
+    if (file.type.startsWith('image/')) {
+      prev.innerHTML = `<img src="${e.target.result}" style="max-width:100%;border-radius:6px;border:1px solid var(--border)">`;
+    } else {
+      prev.innerHTML = `<div class="badge badge-teal">📄 ${file.name}</div>`;
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function solveHomework() {
+  let problem = '';
+  if (hwTab === 'text') problem = document.getElementById('hw-problem').value;
+  else if (hwTab === 'latex') problem = `LaTeX problem: ${document.getElementById('hw-latex').value}`;
+  else if (hwTab === 'code') problem = `C++ code problem:\n\`\`\`cpp\n${document.getElementById('hw-code').value}\n\`\`\``;
+  else if (hwTab === 'photo') problem = 'A photo of a handwritten engineering problem has been uploaded.';
+
+  if (!problem.trim()) { showToast('Please enter a problem first!', 'amber'); return; }
+
+  const subject = document.getElementById('hw-subject-ctx').value;
+  const body = document.getElementById('hw-solution-body');
+  body.innerHTML = `<div style="text-align:center;padding:40px 0"><div class="thinking-dots"><span></span><span></span><span></span></div><div style="font-size:0.8rem;color:var(--text-muted);margin-top:10px">Analyzing problem...</div></div>`;
+
+  try {
+    const systemPrompt = `You are an expert engineering tutor. A student has submitted a homework problem${subject?` in ${subject}`:''}.
+
+Walk through the solution step-by-step like a Socratic tutor. Structure your response:
+
+## Problem Analysis
+Identify what type of problem this is and what concepts apply.
+
+## Step-by-Step Solution
+Show every step clearly. Number them. Explain WHY each step is taken, not just what.
+
+## Key Formula Used
+State the main formula(s) with LaTeX.
+
+## Final Answer
+Box the final answer clearly.
+
+## Common Mistakes
+What errors do students typically make here?
+
+## Follow-up Challenge
+Give ONE similar problem for the student to try on their own.
+
+Use LaTeX for all math ($inline$ and $$display$$). For code, use proper code blocks.`;
+
+    const response = await callAI(systemPrompt + '\n\nProblem:\n' + problem, 1500);
+    body.innerHTML = `<div class="ai-content">${renderMarkdown(response)}</div>`;
+    setTimeout(()=>{ renderMath(); hljs.highlightAll(); }, 50);
+  } catch(e) {
+    body.innerHTML = `<div style="color:var(--red)">Error connecting to AI. Please try again.</div>`;
+  }
+}
+
+// ============================================================
+//  CIRCUIT CANVAS
+// ============================================================
+let circuitCtx = null;
+let circuitElements = [];
+let drawing = false;
+let startPt = null;
+
+document.addEventListener('DOMContentLoaded', () => {
+  const canvas = document.getElementById('circuit-canvas');
+  if (!canvas) return;
+  circuitCtx = canvas.getContext('2d');
+  drawCircuitGrid();
+
+  canvas.addEventListener('mousedown', e => {
+    drawing = true;
+    const r = canvas.getBoundingClientRect();
+    startPt = { x: e.clientX-r.left, y: e.clientY-r.top };
+  });
+  canvas.addEventListener('mouseup', e => {
+    if (!drawing) return;
+    drawing = false;
+    const r = canvas.getBoundingClientRect();
+    const endPt = { x: e.clientX-r.left, y: e.clientY-r.top };
+    circuitElements.push({ type:'wire', x1:startPt.x, y1:startPt.y, x2:endPt.x, y2:endPt.y });
+    redrawCircuit();
+  });
+});
+
+function drawCircuitGrid() {
+  if (!circuitCtx) return;
+  const canvas = document.getElementById('circuit-canvas');
+  circuitCtx.fillStyle = '#101217';
+  circuitCtx.fillRect(0,0,canvas.width,canvas.height);
+  circuitCtx.strokeStyle = 'rgba(255,255,255,0.04)';
+  circuitCtx.lineWidth = 1;
+  for(let x=0;x<canvas.width;x+=20){ circuitCtx.beginPath();circuitCtx.moveTo(x,0);circuitCtx.lineTo(x,canvas.height);circuitCtx.stroke(); }
+  for(let y=0;y<canvas.height;y+=20){ circuitCtx.beginPath();circuitCtx.moveTo(0,y);circuitCtx.lineTo(canvas.width,y);circuitCtx.stroke(); }
+}
+
+function redrawCircuit() {
+  const canvas = document.getElementById('circuit-canvas');
+  drawCircuitGrid();
+  circuitElements.forEach(el => {
+    if (el.type === 'wire') {
+      circuitCtx.strokeStyle = '#f5a623';
+      circuitCtx.lineWidth = 2;
+      circuitCtx.beginPath();
+      circuitCtx.moveTo(el.x1,el.y1);
+      circuitCtx.lineTo(el.x2,el.y2);
+      circuitCtx.stroke();
+    } else if (el.type === 'label') {
+      circuitCtx.fillStyle = '#3dd6d0';
+      circuitCtx.font = '12px Space Mono,monospace';
+      circuitCtx.fillText(el.text, el.x, el.y);
+    }
+  });
+}
+
+function clearCircuit() { circuitElements = []; redrawCircuit(); }
+
+function addCircuitElement(type) {
+  const labels = { R:'R=10Ω', V:'Vs=12V', C:'C=100μF' };
+  circuitElements.push({ type:'label', text:labels[type]||type, x:20+Math.random()*300, y:50+Math.random()*150 });
+  redrawCircuit();
+}
+
+async function analyzeCircuit() {
+  const desc = circuitElements.map(e=>e.type==='label'?e.text:'wire').join(', ');
+  showToast('Analyzing circuit...', 'teal');
+  document.getElementById('hw-problem').value = `Analyze this circuit with elements: ${desc}. Apply KVL and KCL to find currents and voltages.`;
+  switchHwTab('text', document.querySelector('#hw-input-tabs .tab'));
+  await solveHomework();
+}
+
+// ============================================================
+//  AI API CALL
+// ============================================================
+async function callAI(systemOrPrompt, maxTokens=1000, messages=null) {
+  const body = {
+    model: 'claude-sonnet-4-20250514',
+    max_tokens: maxTokens,
+    system: messages ? systemOrPrompt : undefined,
+    messages: messages || [{ role:'user', content: systemOrPrompt }],
+  };
+  if (messages) body.messages = messages;
+  if (!messages) delete body.system;
+
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+
+  if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+  const data = await resp.json();
+  return data.content?.find(b=>b.type==='text')?.text || '';
+}
+
+// ============================================================
+//  UTILS
+// ============================================================
+function renderMarkdown(text) {
+  try {
+    // protect LaTeX before markdown parsing
+    const placeholders = [];
+    text = text.replace(/\$\$([\s\S]*?)\$\$/g, (_, m) => { placeholders.push(`$$${m}$$`); return `@@MATH${placeholders.length-1}@@`; });
+    text = text.replace(/\$([\s\S]*?)\$/g, (_, m) => { placeholders.push(`$${m}$`); return `@@IMATH${placeholders.length-1}@@`; });
+    let html = marked.parse(text);
+    placeholders.forEach((p,i)=>{
+      html = html.replace(`@@MATH${i}@@`, p).replace(`@@IMATH${i}@@`, p);
+    });
+    return html;
+  } catch(e) { return text; }
+}
+
+function renderMath() {
+  try {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left:'$$', right:'$$', display:true },
+        { left:'$', right:'$', display:false },
+        { left:'\\(', right:'\\)', display:false },
+        { left:'\\[', right:'\\]', display:true },
+      ],
+      throwOnError: false,
+    });
+  } catch(e){}
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+function showToast(msg, type='amber') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast';
+  const colors = { amber:'var(--amber-text)', teal:'var(--teal)', red:'var(--red)' };
+  t.innerHTML = `<span style="color:${colors[type]||colors.amber}">${msg}</span>`;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(), 3500);
+}
+
+function showSessionDetail(id) {
+  const s = state.timetable.find(x=>x.id===id);
+  if (!s) return;
+  showToast(`📅 ${s.day} ${s.time}: ${s.subject} — ${s.topic} (${s.duration}min)`, 'teal');
+}
+
+// ============================================================
+//  RESPONSIVE / MOBILE
+// ============================================================
+window.addEventListener('resize', () => {
+  const btn = document.getElementById('mobile-menu-btn');
+  btn.style.display = window.innerWidth < 900 ? 'flex' : 'none';
+});
+if (window.innerWidth < 900) {
+  document.getElementById('mobile-menu-btn').style.display = 'flex';
+}
+
+// ============================================================
+//  DAILY NOTIFICATION SIMULATION
+// ============================================================
+setTimeout(()=>{
+  if (state.profile) {
+    const todaySessions = getTodaySessions();
+    if (todaySessions.length) {
+      showToast(`📅 Today: ${todaySessions[0].time} – ${todaySessions[0].subject}: ${todaySessions[0].topic}`, 'teal');
+    }
+  }
+}, 2000);
+
+</script>
+</body>
+</html>
